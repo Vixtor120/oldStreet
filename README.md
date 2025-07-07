@@ -1,4 +1,4 @@
-# 🎮 OldStreet - Plataforma de Gaming
+# 🎮 OldStreet - Servidor de Rolplay
 
 ![OldStreet Logo](/public/images/logo.png)
 
@@ -120,10 +120,6 @@ OldStreet_New/
 3. Commit tus cambios (`git commit -m 'Add: alguna característica amazing'`)
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abre un Pull Request
-
-## 📜 Licencia
-
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ## 🌟 Agradecimientos
 
