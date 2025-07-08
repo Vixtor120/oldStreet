@@ -126,6 +126,39 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.3 }}
         >
+          {/* Logo del servidor */}
+          <motion.div 
+            className="flex justify-center mb-8"
+            initial={{ y: -30, opacity: 0, scale: 0.8 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <motion.div 
+              className="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center"
+              whileHover={{ 
+                scale: 1.1,
+                rotate: [0, -5, 5, -5, 0],
+                filter: "drop-shadow(0 0 20px rgba(255, 215, 0, 0.8))"
+              }}
+              animate={{
+                filter: [
+                  "drop-shadow(0 0 10px rgba(255, 215, 0, 0.3))",
+                  "drop-shadow(0 0 20px rgba(255, 215, 0, 0.6))",
+                  "drop-shadow(0 0 10px rgba(255, 215, 0, 0.3))"
+                ]
+              }}
+              transition={{
+                filter: { duration: 3, repeat: Infinity }
+              }}
+            >
+              <img 
+                src="/images/logo.png" 
+                alt="Logo OldStreet" 
+                className="w-full h-full object-contain"
+              />
+            </motion.div>
+          </motion.div>
+
           {/* Título principal */}
           <motion.h1 
             className="text-6xl md:text-7xl font-bold mb-6 text-yellow-400 drop-shadow-2xl"
@@ -135,7 +168,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             }}
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
             whileHover={{
               textShadow: '0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.6)',
             }}
@@ -148,7 +181,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             className="flex items-center justify-center mb-8"
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
           >
             <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent w-1/3"></div>
             <motion.div 

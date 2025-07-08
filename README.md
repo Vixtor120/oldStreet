@@ -11,8 +11,10 @@ OldStreet es una plataforma web moderna para una comunidad de gaming, desarrolla
 - **Modo Oscuro**: Diseño optimizado para modo oscuro con acentos en amarillo
 - **Integración con Discord**: Acceso directo a la comunidad de Discord
 - **Gestión de Whitelist**: Sistema de solicitud para unirse a la comunidad
+- **📧 Sistema de Correos**: Envío automático de formularios de whitelist por correo electrónico
+- **🚀 Deploy Ready**: Configurado para hosting en Hostinger con PHP
 
-## � Tecnologías Utilizadas
+## 🚀 Tecnologías Utilizadas
 
 - **Frontend:**
   - [React 18](https://reactjs.org/) - Biblioteca de UI con hooks y componentes funcionales
@@ -20,6 +22,11 @@ OldStreet es una plataforma web moderna para una comunidad de gaming, desarrolla
   - [Tailwind CSS](https://tailwindcss.com/) - Framework CSS utilitario
   - [Framer Motion](https://www.framer.com/motion/) - Biblioteca de animaciones
   - [Vite](https://vitejs.dev/) - Build tool y servidor de desarrollo
+
+- **Backend:**
+  - [PHP](https://www.php.net/) - Manejo de envío de correos
+  - Función `mail()` nativa de PHP para envío de correos
+  - Headers CORS para integración frontend-backend
 
 ## �📋 Requisitos Previos
 
@@ -112,6 +119,46 @@ OldStreet_New/
   - Tipografía clara y legible
   - Animaciones sutiles para mejor feedback
   - Diseño centrado en la experiencia de usuario
+
+## 🚀 Despliegue en Hostinger
+
+### Compilación automática
+Ejecuta el script de compilación según tu sistema operativo:
+
+**Windows:**
+```bash
+build_for_hostinger.bat
+```
+
+**Linux/Mac:**
+```bash
+./build_for_hostinger.sh
+```
+
+### Despliegue manual
+1. **Compilar el proyecto:**
+   ```bash
+   npm run build
+   ```
+
+2. **Preparar archivos:**
+   - Copia todo el contenido de `dist/` a tu directorio `public_html/` en Hostinger
+   - Asegúrate de subir también:
+     - `send_whitelist.php` (manejo de correos)
+     - `.htaccess` (configuración del servidor)
+
+3. **Configurar correo:**
+   - Verifica que el correo `oldstreetnew@oldstreetcm.com` esté configurado en tu panel de Hostinger
+   - Prueba el envío accediendo a `tu-dominio.com/test_email.php`
+
+### 📧 Sistema de Correos
+El formulario de whitelist envía automáticamente los datos a `oldstreetnew@oldstreetcm.com` con:
+- ✅ Formato HTML profesional y organizado
+- ✅ Todas las respuestas del formulario estructuradas
+- ✅ Información del personaje y fecha de envío
+- ✅ Diseño responsive para lectura en cualquier dispositivo
+
+Para más detalles, consulta: [CORREO_SETUP.md](./CORREO_SETUP.md)
 
 ## 🤝 Contribución
 

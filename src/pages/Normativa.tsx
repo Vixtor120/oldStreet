@@ -1230,9 +1230,9 @@ const Normativa: React.FC<NormativaProps> = ({ onNavigate }) => {
                 boxShadow: "0 0 20px rgba(156, 163, 175, 0.3)",
               }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => onNavigate('home')}
+              onClick={() => onNavigate('menu')}
             >
-              🏠 Volver al Inicio
+              🏠 Volver al Menú
             </motion.button>
             
             <motion.button 
