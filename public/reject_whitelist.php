@@ -1,4 +1,7 @@
 <?php
+// Cargar variables de entorno
+require_once 'env_loader.php';
+
 header('Content-Type: text/html; charset=UTF-8');
 
 // Verificar que se han pasado los parámetros necesarios
@@ -45,7 +48,7 @@ try {
     file_put_contents($filename, json_encode($requests, JSON_PRETTY_PRINT));
     
     // Enviar notificación a Discord
-    $discordMessage = "《🚫》- <@" . $request['data']['discord'] . "> - 🌚 ¡Tu whitelist fue **𝐑𝐄𝐂𝐇𝐀𝐙𝐀𝐃𝐀** ! 🌚";
+    $discordMessage = "《🚫》- <@" . $request['data']['discord'] . "> - 🌚 ¡Tu whitelist fue **𝐑𝐄𝐂𝐇𝐀𝐙𝐀𝐃𝐀𝐓𝐀** ! 🌚";
     
     sendDiscordNotification($discordMessage);
     
@@ -133,135 +136,67 @@ function showSuccessPage($nombrePersonaje, $accion) {
                 justify-content: center;
             }
             .container {
-                max-width: 600px;
+                max-width: 450px;
                 margin: 0 auto;
                 background: #2a2a2a;
-                padding: 40px;
-                border-radius: 15px;
-                border: 3px solid #ef4444;
-                box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+                padding: 30px;
+                border-radius: 10px;
+                border: 2px solid #ef4444;
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
                 text-align: center;
             }
-            .reject-icon {
-                font-size: 80px;
-                color: #ef4444;
-                margin-bottom: 20px;
-                animation: shake 1s ease-in-out;
-            }
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-10px); }
-                75% { transform: translateX(10px); }
+            .icon {
+                font-size: 60px;
+                margin-bottom: 15px;
             }
             h1 {
                 color: #ef4444;
-                font-size: 32px;
-                margin-bottom: 20px;
-                text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+                font-size: 28px;
+                margin-bottom: 15px;
             }
             .user-info {
                 background: #1a1a1a;
-                padding: 20px;
-                border-radius: 10px;
-                margin: 20px 0;
-                border-left: 4px solid #ef4444;
-            }
-            .actions {
-                margin-top: 30px;
+                padding: 15px;
+                border-radius: 8px;
+                margin: 15px 0;
+                border-left: 3px solid #ef4444;
             }
             .btn {
                 display: inline-block;
-                padding: 12px 25px;
+                padding: 10px 20px;
                 background: #ef4444;
                 color: white;
                 text-decoration: none;
-                border-radius: 8px;
+                border-radius: 5px;
                 margin: 5px;
-                transition: all 0.3s ease;
                 border: none;
                 cursor: pointer;
                 font-size: 16px;
             }
             .btn:hover {
                 background: #dc2626;
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
-            }
-            .btn-secondary {
-                background: #6b7280;
-            }
-            .btn-secondary:hover {
-                background: #4b5563;
-            }
-            .timestamp {
-                color: #9ca3af;
-                font-size: 14px;
-                margin-top: 20px;
-            }
-            .notification-sent {
-                background: #7f1d1d;
-                border: 1px solid #ef4444;
-                padding: 15px;
-                border-radius: 8px;
-                margin: 20px 0;
-            }
-            .feedback-info {
-                background: #374151;
-                border: 1px solid #6b7280;
-                padding: 15px;
-                border-radius: 8px;
-                margin: 20px 0;
-                text-align: left;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="reject-icon">❌</div>
+            <div class="icon">❌</div>
             <h1>Whitelist ' . ucfirst($accion) . '</h1>
             
             <div class="user-info">
-                <h3 style="color: #ffd700; margin-top: 0;">Usuario Procesado</h3>
-                <p><strong>Nombre del Personaje:</strong> ' . htmlspecialchars($nombrePersonaje) . '</p>
+                <p><strong>Personaje:</strong> ' . htmlspecialchars($nombrePersonaje) . '</p>
                 <p><strong>Estado:</strong> <span style="color: #ef4444; font-weight: bold;">RECHAZADO</span></p>
             </div>
             
-            <div class="notification-sent">
-                <h4 style="margin-top: 0; color: #ef4444;">📢 Notificaciones Enviadas</h4>
-                <p>✅ Mensaje enviado al canal de Discord</p>
-                <p>✅ Usuario notificado por email</p>
-                <p>✅ Base de datos actualizada</p>
-            </div>
+            <p>Se ha enviado una notificación al usuario. Puede volver a intentarlo en el futuro.</p>
             
-            <div class="feedback-info">
-                <h4 style="margin-top: 0; color: #ffd700;">💡 Información para el Usuario</h4>
-                <p>El usuario ha sido notificado que:</p>
-                <ul style="text-align: left; margin: 10px 0;">
-                    <li>Puede revisar la normativa del servidor</li>
-                    <li>Puede mejorar sus respuestas</li>
-                    <li>Puede volver a aplicar cuando esté preparado</li>
-                    <li>El staff está disponible para resolver dudas</li>
-                </ul>
-            </div>
-            
-            <div class="actions">
-                <button onclick="window.close()" class="btn">
-                    🔙 Cerrar Ventana
-                </button>
-            </div>
-            
-            <div class="timestamp">
-                Procesado el ' . date('d/m/Y H:i:s') . '
-            </div>
+            <button onclick="window.close()" class="btn">Cerrar</button>
         </div>
         
         <script>
-            // Auto-cerrar después de 30 segundos
-            setTimeout(() => {
-                if (confirm("¿Cerrar esta ventana automáticamente?")) {
-                    window.close();
-                }
-            }, 30000);
+            setTimeout(function() {
+                window.close();
+            }, 10000);  // Cerrar automáticamente después de 10 segundos
         </script>
     </body>
     </html>';
@@ -288,49 +223,43 @@ function showErrorPage($title, $message) {
                 justify-content: center;
             }
             .container {
-                max-width: 500px;
+                max-width: 400px;
                 margin: 0 auto;
                 background: #2a2a2a;
-                padding: 40px;
-                border-radius: 15px;
-                border: 3px solid #ef4444;
-                box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+                padding: 25px;
+                border-radius: 10px;
+                border: 2px solid #ef4444;
+                box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
                 text-align: center;
             }
-            .error-icon {
-                font-size: 80px;
-                color: #ef4444;
-                margin-bottom: 20px;
+            .icon {
+                font-size: 50px;
+                margin-bottom: 15px;
             }
             h1 {
                 color: #ef4444;
-                font-size: 28px;
-                margin-bottom: 20px;
+                font-size: 24px;
+                margin-bottom: 15px;
             }
             .btn {
                 display: inline-block;
-                padding: 12px 25px;
+                padding: 8px 20px;
                 background: #ef4444;
                 color: white;
                 text-decoration: none;
-                border-radius: 8px;
-                margin-top: 20px;
-                transition: all 0.3s ease;
-            }
-            .btn:hover {
-                background: #dc2626;
-                transform: translateY(-2px);
+                border-radius: 5px;
+                margin-top: 15px;
+                border: none;
+                cursor: pointer;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <div class="error-icon">❌</div>
+            <div class="icon">❌</div>
             <h1>' . htmlspecialchars($title) . '</h1>
             <p>' . htmlspecialchars($message) . '</p>
-            <button onclick="window.close()" class="btn">
-                🔙 Cerrar
-            </button>
+            <button onclick="window.close()" class="btn">Cerrar</button>
         </div>
     </body>
     </html>';
