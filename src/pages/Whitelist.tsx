@@ -11,6 +11,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
   const [formData, setFormData] = useState({
     // Información Personal
     discord: '',
+    discordUsername: '',
     edad: '',
     comoEncontrasteServidor: '',
     
@@ -73,6 +74,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
         // Reiniciar formulario
         setFormData({
           discord: '',
+          discordUsername: '',
           edad: '',
           comoEncontrasteServidor: '',
           queAportaras: '',
@@ -207,19 +209,49 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                     transition={{ duration: 0.4, delay: 1.8 }}
                   >
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Discord: *
+                      ID de Discord: *
                     </label>
-                    <p className="text-xs text-gray-400 mb-2">
-                      Puedes poner tu nombre de discord o tu ID.
-                    </p>
+                    <div className="bg-amber-500/10 border-l-4 border-amber-400 p-3 mb-3 rounded">
+                      <p className="text-xs text-amber-100 font-medium mb-2">📋 ¿Cómo obtener tu ID de Discord?</p>
+                      <ol className="text-xs text-gray-300 space-y-1">
+                        <li><span className="text-amber-400">1.</span> Ve a Configuración de Discord → Avanzado</li>
+                        <li><span className="text-amber-400">2.</span> Activa "Modo desarrollador"</li>
+                        <li><span className="text-amber-400">3.</span> Clic derecho en tu perfil → "Copiar ID de usuario"</li>
+                        <li><span className="text-amber-400">4.</span> Pega el ID aquí (son números largos)</li>
+                      </ol>
+                    </div>
                     <input
                       type="text"
                       name="discord"
                       value={formData.discord}
                       onChange={handleInputChange}
                       required
+                      pattern="[0-9]{17,19}"
+                      title="Debe ser un ID de Discord válido (17-19 números)"
                       className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
-                      placeholder="usuario#1234"
+                      placeholder="123456789012345678"
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 1.85 }}
+                  >
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Nombre de Usuario de Discord: *
+                    </label>
+                    <p className="text-xs text-gray-400 mb-2">
+                      Tu nombre visible en Discord. Es importante por si hay algún problema con el ID y el staff necesita contactarte directamente en el servidor.
+                    </p>
+                    <input
+                      type="text"
+                      name="discordUsername"
+                      value={formData.discordUsername}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
+                      placeholder="mi_nombre_usuario"
                     />
                   </motion.div>
                   

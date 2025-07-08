@@ -7,7 +7,8 @@ echo "<h2>🧪 Test de envío de correo</h2>";
 
 // Datos de prueba
 $testData = [
-    'discord' => 'TestUser#1234',
+    'discord' => '123456789012345678',
+    'discordUsername' => 'usuario_ejemplo',
     'edad' => '25',
     'comoEncontrasteServidor' => 'Por un amigo',
     'queAportaras' => 'Experiencia en roleplay y buenas historias',

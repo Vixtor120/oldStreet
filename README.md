@@ -10,8 +10,10 @@ OldStreet es una plataforma web moderna para una comunidad de gaming, desarrolla
 - **Navegación Fluida**: Animaciones suaves usando Framer Motion
 - **Modo Oscuro**: Diseño optimizado para modo oscuro con acentos en amarillo
 - **Integración con Discord**: Acceso directo a la comunidad de Discord
-- **Gestión de Whitelist**: Sistema de solicitud para unirse a la comunidad
-- **📧 Sistema de Correos**: Envío automático de formularios de whitelist por correo electrónico
+- **🎯 Sistema Semi-Automático de Whitelist**: Validación por email con un solo clic del staff
+- **📧 Sistema de Validación por Email**: Emails profesionales con botones de aprobación/rechazo
+- **🤖 Discord Automático**: Notificaciones automáticas de whitelist en Discord
+- **🔐 Sistema Seguro**: Tokens únicos y validación automática
 - **🚀 Deploy Ready**: Configurado para hosting en Hostinger con PHP
 
 ## 🚀 Tecnologías Utilizadas
@@ -24,8 +26,10 @@ OldStreet es una plataforma web moderna para una comunidad de gaming, desarrolla
   - [Vite](https://vitejs.dev/) - Build tool y servidor de desarrollo
 
 - **Backend:**
-  - [PHP](https://www.php.net/) - Manejo de envío de correos
-  - Función `mail()` nativa de PHP para envío de correos
+  - [PHP](https://www.php.net/) - Sistema de validación de whitelist
+  - Sistema semi-automático de aprobación por email
+  - Integración automática con Discord via webhooks
+  - Tokens de seguridad únicos y validación automática
   - Headers CORS para integración frontend-backend
 
 ## �📋 Requisitos Previos
@@ -80,14 +84,25 @@ La aplicación se abrirá en [http://localhost:5173](http://localhost:5173) por 
 ```
 OldStreet_New/
 ├── public/                 # Archivos públicos estáticos
+│   ├── send_whitelist.php  # Sistema de envío de whitelist
+│   ├── approve_whitelist.php # Aprobación automática
+│   ├── reject_whitelist.php  # Rechazo automático
+│   ├── test_email.php      # Pruebas de email
+│   └── images/             # Imágenes del proyecto
 ├── src/
 │   ├── components/        # Componentes reutilizables
+│   │   └── Navbar.tsx     # Barra de navegación
 │   ├── pages/            # Páginas de la aplicación
-│   │   └── Home.tsx      # Página principal
+│   │   ├── Home.tsx      # Página principal
+│   │   ├── Menu.tsx      # Página de menú
+│   │   ├── Normativa.tsx # Normativas de la comunidad
+│   │   └── Whitelist.tsx # Formulario de whitelist
 │   ├── assets/           # Recursos estáticos
 │   ├── App.tsx           # Componente principal
 │   ├── main.tsx          # Punto de entrada
 │   └── index.css         # Estilos globales + Tailwind
+├── docs/                 # Documentación del sistema
+│   └── GUIA_SISTEMA_WHITELIST.md  # Guía completa del sistema
 ├── .github/
 │   └── copilot-instructions.md  # Instrucciones para Copilot
 ├── .vscode/
@@ -151,14 +166,29 @@ build_for_hostinger.bat
    - Verifica que el correo `oldstreetnew@oldstreetcm.com` esté configurado en tu panel de Hostinger
    - Prueba el envío accediendo a `tu-dominio.com/test_email.php`
 
-### 📧 Sistema de Correos
-El formulario de whitelist envía automáticamente los datos a `oldstreetnew@oldstreetcm.com` con:
-- ✅ Formato HTML profesional y organizado
-- ✅ Todas las respuestas del formulario estructuradas
-- ✅ Información del personaje y fecha de envío
-- ✅ Diseño responsive para lectura en cualquier dispositivo
+### 📧 Sistema Semi-Automático de Whitelist
 
-Para más detalles, consulta: [CORREO_SETUP.md](./CORREO_SETUP.md)
+El sistema incluye una **validación semi-automática** revolucionaria:
+
+✅ **Para el Staff (súper simple):**
+- Recibe email con información completa del solicitante
+- **Dos botones grandes**: ✅ APROBAR / ❌ RECHAZAR  
+- **Un solo clic** procesa todo automáticamente
+- **Funciona desde móvil, tablet o PC**
+
+✅ **Automático al 100%:**
+- **Discord se actualiza solo** con mensajes cortos y directos
+- **Seguridad total** con tokens únicos por solicitud
+- **No requiere panel** ni configuración complicada
+
+### Mensajes en Discord:
+```
+✅ Aprobado: 《✅》- <@123456789012345678> - 🌚 ¡Tu whitelist fue 𝐀𝐂𝐄𝐏𝐓𝐀𝐃𝐀 ! 🌚
+🚫 Rechazado: 《🚫》- <@123456789012345678> - 🌚 ¡Tu whitelist fue 𝐑𝐄𝐂𝐇𝐀𝐙𝐀𝐃𝐀 ! 🌚
+```
+
+**📚 Documentación completa:**
+- [`GUIA_SISTEMA_WHITELIST.md`](./GUIA_SISTEMA_WHITELIST.md) - Guía completa del sistema semi-automático
 
 ## 🤝 Contribución
 
