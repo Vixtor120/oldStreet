@@ -61,8 +61,8 @@ try {
 }
 
 function sendDiscordNotification($message) {
-    // URL del webhook de Discord (cambiar por tu webhook real)
-    $webhookUrl = "https://discord.com/api/webhooks/1392127929198186567/VJR1XvREGGpo1Y8-kJTXlXMOEriWFvfpEGqNN28OCyArTn7Tplw3YfrGyPdZSKdEzYc_";
+    // URL del webhook de Discord
+    $webhookUrl = "https://discord.com/api/webhooks/1392154027516756009/IQzI5nowrdec1NEcgYVhjWgvQRUdI-3FnjAhcqn-og6nXoECJnq9Os-kHFyj8SkNyB0j";
     
     $data = json_encode([
         "content" => $message,
