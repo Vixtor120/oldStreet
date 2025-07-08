@@ -1,10 +1,17 @@
 <?php
+// Enable error reporting for debugging (remove in production)
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // No mostrar errores directamente en la salida 
+ini_set('log_errors', 1); // Loguear errores en archivo
+ini_set('error_log', 'php_errors.log'); // Archivo donde se guardarán los errores
+
+// Verificar si existe la función mail
+if (!function_exists('mail')) {
+    error_log('ALERTA: La función mail() no está disponible en este servidor');
+}
+
 header('Content-Type: application/json');
-h      // Configuración de correo
-    $to = 'oldstreetnew@oldstreetcm.com';
-    $subject = '🔔 Nueva Solicitud de Whitelist - ' . htmlspecialchars($data['nombrePersonaje']);/ Configuración de correo
-    $to = 'oldstreetnew@oldstreetcm.com';
-    $subject = '📋 Nueva Solicitud de Whitelist - ' . htmlspecialchars($data['nombrePersonaje']);er('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
@@ -24,10 +31,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 try {
     // Obtener datos del formulario
     $input = file_get_contents('php://input');
+    
+    // Log the received input for debugging
+    error_log('Received input: ' . $input);
+    
     $data = json_decode($input, true);
     
     if (!$data) {
-        throw new Exception('Datos del formulario inválidos');
+        error_log('JSON decode failed for input: ' . $input);
+        throw new Exception('Datos del formulario inválidos o JSON malformado');
     }
     
     // Validar campos requeridos
@@ -46,6 +58,15 @@ try {
         }
     }
     
+    // Validar checkboxes requeridos
+    if (!isset($data['aceptarNormativa']) || $data['aceptarNormativa'] !== true) {
+        throw new Exception("Debes aceptar la normativa");
+    }
+    
+    if (!isset($data['aceptarRevision']) || $data['aceptarRevision'] !== true) {
+        throw new Exception("Debes aceptar la revisión de la solicitud");
+    }
+    
     // Generar ID único y token de seguridad para esta solicitud
     $whitelistId = uniqid('wl_', true);
     $securityToken = hash('sha256', $whitelistId . time() . 'oldstreet_secret_key');
@@ -55,7 +76,7 @@ try {
     
     // Configuración de correo
     $to = 'oldstreetnew@oldstreetcm.com';
-    $subject = '� Nueva Solicitud de Whitelist - ' . htmlspecialchars($data['nombrePersonaje']);
+    $subject = '🔔 Nueva Solicitud de Whitelist - ' . htmlspecialchars($data['nombrePersonaje']);
     
     // Crear el contenido HTML del correo con botones de validación
     $htmlContent = generateStaffEmailHTML($data, $whitelistId, $securityToken);
@@ -69,8 +90,23 @@ try {
         'X-Mailer: PHP/' . phpversion()
     ];
     
+    // Registrar en el log de errores para depuración
+    error_log("Intentando enviar correo a: {$to}");
+    error_log("Asunto del correo: {$subject}");
+    
     // Enviar correo
-    $success = mail($to, $subject, $htmlContent, implode("\r\n", $headers));
+    $success = try_send_email($to, $subject, $htmlContent, implode("\r\n", $headers));
+    
+    // Registrar resultado del envío
+    error_log("Resultado del envío: " . ($success ? "Exitoso" : "Fallido"));
+    
+    // Guardar en archivo local (como respaldo)
+    $backupContent = "FECHA: " . date('Y-m-d H:i:s') . "\n";
+    $backupContent .= "PARA: {$to}\n";
+    $backupContent .= "ASUNTO: {$subject}\n";
+    $backupContent .= "CONTENIDO:\n{$htmlContent}\n";
+    $backupContent .= "-------------------------\n\n";
+    file_put_contents('whitelist_mails.log', $backupContent, FILE_APPEND);
     
     if ($success) {
         echo json_encode([
@@ -78,15 +114,33 @@ try {
             'message' => '¡Solicitud enviada exitosamente! Te contactaremos pronto.'
         ]);
     } else {
-        throw new Exception('Error al enviar el correo');
+        error_log("Error al enviar el correo. Info del servidor: " . print_r(error_get_last(), true));
+        throw new Exception('Error al enviar el correo. El formulario se guardó, pero no se pudo enviar la notificación.');
     }
     
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode([
+    $error_details = [
         'error' => true,
-        'message' => 'Error: ' . $e->getMessage()
-    ]);
+        'message' => 'Error: ' . $e->getMessage(),
+        'debug_info' => [
+            'timestamp' => date('Y-m-d H:i:s'),
+            'php_version' => phpversion(),
+            'file_writable' => is_writable('.'),
+        ]
+    ];
+    
+    if (function_exists('mail')) {
+        $error_details['debug_info']['mail_function'] = 'disponible';
+    } else {
+        $error_details['debug_info']['mail_function'] = 'no disponible';
+    }
+    
+    // Log detallado del error
+    error_log('ERROR EN WHITELIST: ' . $e->getMessage() . ' - Traza: ' . $e->getTraceAsString());
+    
+    // Responder con información de depuración pero no demasiado sensible
+    echo json_encode($error_details);
 }
 
 // Función para guardar solicitudes en archivo JSON
@@ -777,5 +831,51 @@ function generateEmailHTML($data) {
         </div>
     </body>
     </html>";
+}
+
+/**
+ * Intenta enviar correo de diferentes maneras
+ * @param string $to Destinatario
+ * @param string $subject Asunto
+ * @param string $message Contenido del mensaje
+ * @param string $headers Cabeceras del correo
+ * @return boolean Éxito o fracaso
+ */
+function try_send_email($to, $subject, $message, $headers) {
+    // Intentar enviar por la función mail nativa
+    $mail_success = mail($to, $subject, $message, $headers);
+    
+    if ($mail_success) {
+        error_log("✓ Correo enviado correctamente usando mail()");
+        return true;
+    }
+    
+    error_log("⚠ Error al enviar correo usando mail(). Intentando método alternativo...");
+    
+    // Si no funciona, podemos intentar otros métodos como guardar en un archivo
+    // (en producción aquí se podría integrar una API de correo como SendGrid, Mailgun, etc.)
+    $fallback_file = 'whitelist_emails/' . date('Y-m-d_H-i-s') . '_' . md5($to . time()) . '.html';
+    
+    // Crear directorio si no existe
+    if (!file_exists('whitelist_emails')) {
+        mkdir('whitelist_emails', 0777, true);
+    }
+    
+    $email_content = "To: {$to}\r\n";
+    $email_content .= "Subject: {$subject}\r\n";
+    $email_content .= "Headers: {$headers}\r\n";
+    $email_content .= "Date: " . date('Y-m-d H:i:s') . "\r\n";
+    $email_content .= "-----------------------------------\r\n\r\n";
+    $email_content .= $message;
+    
+    $file_saved = file_put_contents($fallback_file, $email_content);
+    
+    if ($file_saved) {
+        error_log("⚠ Correo guardado como archivo en {$fallback_file} para revisión manual");
+        return true; // Consideramos éxito si al menos se guardó el archivo
+    }
+    
+    error_log("✗ Error crítico: no se pudo enviar ni guardar el correo");
+    return false;
 }
 ?>

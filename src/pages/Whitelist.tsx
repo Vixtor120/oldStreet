@@ -67,10 +67,30 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
         body: JSON.stringify(formData),
       });
 
-      const result = await response.json();
+      // Check if response is ok
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
+      // Get the response text first to check if it's valid JSON
+      const responseText = await response.text();
+      
+      // Log the raw response for debugging
+      console.log('Raw response:', responseText);
+      
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch (jsonError) {
+        console.error('JSON Parse Error:', jsonError);
+        console.error('Response was:', responseText);
+        throw new Error('La respuesta del servidor no es válida. Por favor, contacta al administrador.');
+      }
+
+      console.log('Respuesta completa del servidor:', result);
+      
       if (result.success) {
-        alert('¡Solicitud enviada exitosamente! Te contactaremos pronto.');
+        alert('¡Solicitud enviada exitosamente! Te contactaremos pronto!');
         // Reiniciar formulario
         setFormData({
           discord: '',
@@ -103,8 +123,16 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
         throw new Error(result.message || 'Error al enviar la solicitud');
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error al enviar la solicitud. Por favor, inténtalo de nuevo.');
+      console.error('Error completo:', error);
+      
+      // Show more detailed error information
+      let errorMessage = 'Error al enviar la solicitud. Por favor, inténtalo de nuevo.';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
