@@ -12,7 +12,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       {[...Array(6)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-yellow-400 rounded-full opacity-20"
+          className="absolute w-2 h-2 bg-amber-400 rounded-full opacity-20"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
@@ -30,10 +30,10 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       ))}
 
       <motion.div 
-        className="rounded-xl shadow-2xl border-4 border-yellow-500 overflow-hidden max-w-5xl w-full relative bg-black"
+        className="rounded-xl shadow-2xl border-4 border-amber-500 overflow-hidden max-w-5xl w-full relative bg-black"
         style={{
           minHeight: '700px',
-          boxShadow: '0 0 50px rgba(255, 215, 0, 0.3), inset 0 0 50px rgba(0, 0, 0, 0.5)'
+          boxShadow: '0 0 50px rgba(245, 158, 11, 0.3), inset 0 0 50px rgba(0, 0, 0, 0.5)'
         }}
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -42,7 +42,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       >
         {/* Borde animado */}
         <motion.div 
-          className="absolute inset-0 rounded-xl border-4 border-yellow-400 opacity-30"
+          className="absolute inset-0 rounded-xl border-4 border-amber-400 opacity-30"
           animate={{
             scale: [1, 1.05, 1],
             opacity: [0.3, 0.6, 0.3],
@@ -58,7 +58,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         
         {/* Esquinas doradas animadas */}
         <motion.div 
-          className="absolute top-4 left-4 w-20 h-20 border-t-4 border-l-4 border-yellow-400 rounded-tl-lg"
+          className="absolute top-4 left-4 w-20 h-20 border-t-4 border-l-4 border-amber-400 rounded-tl-lg"
           animate={{
             scale: [1, 1.1, 1],
             opacity: [0.7, 1, 0.7],
@@ -69,7 +69,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           }}
         />
         <motion.div 
-          className="absolute top-4 right-4 w-20 h-20 border-t-4 border-r-4 border-yellow-400 rounded-tr-lg"
+          className="absolute top-4 right-4 w-20 h-20 border-t-4 border-r-4 border-amber-400 rounded-tr-lg"
           animate={{
             scale: [1, 1.1, 1],
             opacity: [0.7, 1, 0.7],
@@ -81,7 +81,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           }}
         />
         <motion.div 
-          className="absolute bottom-4 left-4 w-20 h-20 border-b-4 border-l-4 border-yellow-400 rounded-bl-lg"
+          className="absolute bottom-4 left-4 w-20 h-20 border-b-4 border-l-4 border-amber-400 rounded-bl-lg"
           animate={{
             scale: [1, 1.1, 1],
             opacity: [0.7, 1, 0.7],
@@ -93,7 +93,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           }}
         />
         <motion.div 
-          className="absolute bottom-4 right-4 w-20 h-20 border-b-4 border-r-4 border-yellow-400 rounded-br-lg"
+          className="absolute bottom-4 right-4 w-20 h-20 border-b-4 border-r-4 border-amber-400 rounded-br-lg"
           animate={{
             scale: [1, 1.1, 1],
             opacity: [0.7, 1, 0.7],
@@ -107,7 +107,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         
         {/* Elemento decorativo flotante solo ⚜️ */}
         <motion.div 
-          className="absolute top-8 left-1/2 transform -translate-x-1/2 text-yellow-400 text-3xl opacity-60"
+          className="absolute top-8 left-1/2 transform -translate-x-1/2 text-amber-400 text-3xl opacity-60"
           animate={{
             y: [0, -10, 0],
           }}
@@ -138,13 +138,13 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
               whileHover={{ 
                 scale: 1.1,
                 rotate: [0, -5, 5, -5, 0],
-                filter: "drop-shadow(0 0 20px rgba(255, 215, 0, 0.8))"
+                filter: "drop-shadow(0 0 20px rgba(245, 158, 11, 0.8))"
               }}
               animate={{
                 filter: [
-                  "drop-shadow(0 0 10px rgba(255, 215, 0, 0.3))",
-                  "drop-shadow(0 0 20px rgba(255, 215, 0, 0.6))",
-                  "drop-shadow(0 0 10px rgba(255, 215, 0, 0.3))"
+                  "drop-shadow(0 0 10px rgba(245, 158, 11, 0.3))",
+                  "drop-shadow(0 0 20px rgba(245, 158, 11, 0.6))",
+                  "drop-shadow(0 0 10px rgba(245, 158, 11, 0.3))"
                 ]
               }}
               transition={{
@@ -161,16 +161,16 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
           {/* Título principal */}
           <motion.h1 
-            className="text-6xl md:text-7xl font-bold mb-6 text-yellow-400 drop-shadow-2xl"
+            className="text-6xl md:text-7xl font-bold mb-6 text-amber-400 drop-shadow-2xl"
             style={{
-              textShadow: '0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4)',
+              textShadow: '0 0 20px rgba(245, 158, 11, 0.8), 0 0 40px rgba(245, 158, 11, 0.4)',
               fontFamily: 'serif'
             }}
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             whileHover={{
-              textShadow: '0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.6)',
+              textShadow: '0 0 30px rgba(245, 158, 11, 1), 0 0 60px rgba(245, 158, 11, 0.6)',
             }}
           >
             ¡Bienvenid@!
@@ -183,15 +183,15 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.8 }}
           >
-            <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent w-1/3"></div>
+            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-1/3"></div>
             <motion.div 
-              className="mx-4 text-yellow-400 text-xl"
+              className="mx-4 text-amber-400 text-xl"
               animate={{ rotate: 360 }}
               transition={{ duration: 8, repeat: Infinity }}
             >
               ✦
             </motion.div>
-            <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent w-1/3"></div>
+            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-1/3"></div>
           </motion.div>
 
           {/* Descripción */}
@@ -206,8 +206,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
               whileHover={{ color: "#ffffff" }}
             >
               Aquí no solo encontrarás un servidor, sino una <motion.span 
-                className="text-yellow-300 font-semibold"
-                whileHover={{ color: "#fef08a" }}
+                className="text-amber-300 font-semibold"
+                whileHover={{ color: "#fbbf24" }}
               >comunidad comprometida</motion.span> con el rol serio y puro a la antigua, la calidad y las opciones a generar nuevos roles.
             </motion.p>
             
@@ -216,8 +216,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
               whileHover={{ color: "#ffffff" }}
             >
               Nos esforzamos por ofrecerte un entorno donde cada historia cuenta, cada personaje es parte de un todo, y tú eres el <motion.span 
-                className="text-yellow-300 font-semibold"
-                whileHover={{ color: "#fef08a" }}
+                className="text-amber-300 font-semibold"
+                whileHover={{ color: "#fbbf24" }}
               >protagonista de tu propio destino</motion.span>. Explora nuevas posibilidades, vive roles como por ejemplo: bombero, abogado, alcalde o inclusive tener la tienda que siempre deseaste.
             </motion.p>
             
@@ -226,8 +226,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
               whileHover={{ color: "#ffffff" }}
             >
               Desafíate y sumérgete en una ciudad donde tus decisiones marcan la diferencia. <motion.span 
-                className="text-yellow-300 font-semibold"
-                whileHover={{ color: "#fef08a" }}
+                className="text-amber-300 font-semibold"
+                whileHover={{ color: "#fbbf24" }}
               >Lo que imagines, aquí puedes hacerlo realidad</motion.span>.
             </motion.p>
           </motion.div>
@@ -239,8 +239,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.1 }}
           >
-            <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent w-1/4"></div>
-            <div className="mx-4 text-yellow-400 flex space-x-2">
+            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-1/4"></div>
+            <div className="mx-4 text-amber-400 flex space-x-2">
               {[0, 1, 2].map((i) => (
                 <motion.span 
                   key={i}
@@ -258,7 +258,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
                 </motion.span>
               ))}
             </div>
-            <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent w-1/4"></div>
+            <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-1/4"></div>
           </motion.div>
 
           {/* Botón de Inicio */}
@@ -269,20 +269,20 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
             transition={{ duration: 0.6, delay: 1.3 }}
           >
             <motion.button 
-              className="bg-gradient-to-r from-yellow-600 to-yellow-700 text-white font-bold py-4 px-12 rounded-lg shadow-lg border-2 border-yellow-500 relative overflow-hidden"
+              className="bg-gradient-to-r from-amber-600 to-amber-700 text-white font-bold py-4 px-12 rounded-lg shadow-lg border-2 border-amber-500 relative overflow-hidden"
               style={{
-                boxShadow: '0 0 20px rgba(255, 215, 0, 0.3)',
+                boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)',
                 textShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
               }}
               whileHover={{
                 scale: 1.1,
-                boxShadow: "0 0 30px rgba(255, 215, 0, 0.5)",
+                boxShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
               }}
               whileTap={{ scale: 0.95 }}
               onClick={() => onNavigate('menu')}
             >
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 opacity-0"
+                className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-600 opacity-0"
                 whileHover={{ opacity: 0.2 }}
               />
               <span className="relative z-10">🚪 Iniciar</span>

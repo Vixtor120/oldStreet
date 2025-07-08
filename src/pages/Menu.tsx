@@ -13,7 +13,7 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
       {[...Array(8)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-yellow-400 rounded-full opacity-20"
+          className="absolute w-2 h-2 bg-amber-400 rounded-full opacity-20"
           style={{
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
@@ -35,7 +35,7 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
 
       {/* Línea dorada */}
       <motion.div 
-        className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-8"
+        className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-8"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 1, delay: 0.4 }}
@@ -57,9 +57,9 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
             transition={{ duration: 0.8, delay: 0.8 }}
           >
             <motion.h2 
-              className="text-4xl font-bold text-yellow-400 mb-4"
+              className="text-4xl font-bold text-amber-400 mb-4"
               style={{
-                textShadow: '0 0 20px rgba(255, 215, 0, 0.8)',
+                textShadow: '0 0 20px rgba(245, 158, 11, 0.8)',
               }}
             >
               ¡Bienvenido a OldStreet!
@@ -75,7 +75,7 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
           >
             {/* Imagen de fondo de GTA Roleplay */}
             <motion.div 
-              className="relative rounded-lg overflow-hidden shadow-2xl border-2 border-yellow-500/30"
+              className="relative rounded-lg overflow-hidden shadow-2xl border-2 border-amber-500/30"
               whileHover={{ scale: 1.02 }}
               transition={{ duration: 0.3 }}
             >
@@ -110,8 +110,8 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
                   className="absolute top-0 left-0 w-full h-full opacity-20"
                   animate={{
                     background: [
-                      'linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.3) 50%, transparent 70%)',
-                      'linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.1) 50%, transparent 70%)',
+                      'linear-gradient(45deg, transparent 30%, rgba(245, 158, 11, 0.3) 50%, transparent 70%)',
+                      'linear-gradient(45deg, transparent 30%, rgba(245, 158, 11, 0.1) 50%, transparent 70%)',
                     ]
                   }}
                   transition={{ duration: 3, repeat: Infinity }}
@@ -130,7 +130,7 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
                 className="text-xl text-gray-300 leading-relaxed"
                 whileHover={{ color: "#ffffff" }}
               >
-                <span className="text-yellow-400 font-semibold">OldStreet</span> es un servidor de roleplay único donde la calidad y la seriedad en el rol son nuestra prioridad.
+                <span className="text-amber-400 font-semibold">OldStreet</span> es un servidor de roleplay único donde la calidad y la seriedad en el rol son nuestra prioridad.
               </motion.p>
               
               <motion.p 
@@ -142,9 +142,9 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
               </motion.p>
 
               <motion.div 
-                className="bg-yellow-500/10 border-l-4 border-yellow-400 p-4 rounded"
+                className="bg-amber-500/10 border-l-4 border-amber-400 p-4 rounded"
               >
-                <p className="text-lg text-yellow-100 font-semibold">¡Importante!</p>
+                <p className="text-lg text-amber-100 font-semibold">¡Importante!</p>
                 <p className="text-gray-300">Para unirte a nuestra comunidad, debes seguir estos pasos obligatorios.</p>
               </motion.div>
             </motion.div>
@@ -157,27 +157,27 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.4 }}
           >
-            <h3 className="text-3xl font-bold text-yellow-400 text-center mb-8">
+            <h3 className="text-3xl font-bold text-amber-400 text-center mb-8">
               Pasos para Unirte al Servidor
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Paso 1: Discord */}
               <motion.div 
-                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-yellow-500/30 relative overflow-hidden"
-                whileHover={{ scale: 1.02, borderColor: "rgba(255, 215, 0, 0.6)" }}
+                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-amber-500/30 relative overflow-hidden"
+                whileHover={{ scale: 1.02, borderColor: "rgba(245, 158, 11, 0.6)" }}
                 transition={{ duration: 0.3 }}
               >
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-xl mr-4">
+                    <div className="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center text-black font-bold text-xl mr-4">
                       1
                     </div>
-                    <h4 className="text-xl font-bold text-yellow-400">Únete a Discord</h4>
+                    <h4 className="text-xl font-bold text-amber-400">Únete a Discord</h4>
                   </div>
                   
                   <p className="text-gray-300 mb-6 leading-relaxed">
-                    Únete a nuestra <span className="text-yellow-400 font-semibold">comunidad oficial</span> en Discord para estar al día con noticias, 
+                    Únete a nuestra <span className="text-amber-400 font-semibold">comunidad oficial</span> en Discord para estar al día con noticias, 
                     eventos y conectar con otros jugadores.
                   </p>
 
@@ -209,20 +209,20 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
 
               {/* Paso 2: Normativa */}
               <motion.div 
-                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-yellow-500/30 relative overflow-hidden"
-                whileHover={{ scale: 1.02, borderColor: "rgba(255, 215, 0, 0.6)" }}
+                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-amber-500/30 relative overflow-hidden"
+                whileHover={{ scale: 1.02, borderColor: "rgba(245, 158, 11, 0.6)" }}
                 transition={{ duration: 0.3 }}
               >
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-xl mr-4">
+                    <div className="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center text-black font-bold text-xl mr-4">
                       2
                     </div>
-                    <h4 className="text-xl font-bold text-yellow-400">Leer la Normativa</h4>
+                    <h4 className="text-xl font-bold text-amber-400">Leer la Normativa</h4>
                   </div>
                   
                   <p className="text-gray-300 mb-6 leading-relaxed">
-                    Es <span className="text-yellow-400 font-semibold">obligatorio</span> leer y entender todas las reglas del servidor. 
+                    Es <span className="text-amber-400 font-semibold">obligatorio</span> leer y entender todas las reglas del servidor. 
                     No conocer las normas no te exime de cumplirlas.
                   </p>
 
@@ -249,21 +249,21 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
 
               {/* Paso 3: Whitelist */}
               <motion.div 
-                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-yellow-500/30 relative overflow-hidden"
-                whileHover={{ scale: 1.02, borderColor: "rgba(255, 215, 0, 0.6)" }}
+                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-amber-500/30 relative overflow-hidden"
+                whileHover={{ scale: 1.02, borderColor: "rgba(245, 158, 11, 0.6)" }}
                 transition={{ duration: 0.3 }}
               >
                 <div className="relative z-10">
                   <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center text-black font-bold text-xl mr-4">
+                    <div className="w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center text-black font-bold text-xl mr-4">
                       3
                     </div>
-                    <h4 className="text-xl font-bold text-yellow-400">Solicitar Whitelist</h4>
+                    <h4 className="text-xl font-bold text-amber-400">Solicitar Whitelist</h4>
                   </div>
                   
                   <p className="text-gray-300 mb-6 leading-relaxed">
                     Completa el formulario de whitelist con tus datos y conocimientos de roleplay. 
-                    <span className="text-yellow-400 font-semibold"> La revisión se hace manualmente</span>.
+                    <span className="text-amber-400 font-semibold"> La revisión se hace manualmente</span>.
                   </p>
 
                   <motion.button 
@@ -296,20 +296,20 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.6 }}
           >
-            <div className="bg-gray-900/90 rounded-lg p-6 border-2 border-yellow-500/30">
-              <h4 className="text-xl font-bold text-yellow-400 mb-4">🎭 ¿Qué puedes hacer en OldStreet?</h4>
+            <div className="bg-gray-900/90 rounded-lg p-6 border-2 border-amber-500/30">
+              <h4 className="text-xl font-bold text-amber-400 mb-4">🎭 ¿Qué puedes hacer en OldStreet?</h4>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-300">
                 <div className="space-y-2">
-                  <p className="font-semibold text-yellow-300">👮‍♂️ Trabajos Legales</p>
+                  <p className="font-semibold text-amber-300">👮‍♂️ Trabajos Legales</p>
                   <p className="text-sm">Policía, Bombero, EMS, Abogado, Alcalde, Mecánico</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="font-semibold text-yellow-300">🏪 Negocios</p>
+                  <p className="font-semibold text-amber-300">🏪 Negocios</p>
                   <p className="text-sm">Tiendas, Restaurantes, Talleres, Empresas</p>
                 </div>
                 <div className="space-y-2">
-                  <p className="font-semibold text-yellow-300">🎪 Entretenimiento</p>
+                  <p className="font-semibold text-amber-300">🎪 Entretenimiento</p>
                   <p className="text-sm">Eventos, Fiestas, Competencias, Shows</p>
                 </div>
               </div>
@@ -324,7 +324,7 @@ const Menu: React.FC<MenuProps> = ({ onNavigate }) => {
             transition={{ duration: 0.8, delay: 1.8 }}
           >
             <motion.div 
-              className="bg-gray-900/90 rounded-lg p-4 border-2 border-yellow-500/30"
+              className="bg-gray-900/90 rounded-lg p-4 border-2 border-amber-500/30"
             >
               <p className="text-center text-gray-300 mb-4">
                 ¿Ya completaste todos los pasos? ¡Perfecto! Mantente conectado con nuestra comunidad:

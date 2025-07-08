@@ -19,15 +19,15 @@ const NavItems: React.FC<NavItemsProps> = ({ onNavigate, currentPage, isMobile =
     <>
       <motion.button 
         className={`${baseButtonClasses} ${
-          isMobile ? 'text-white hover:text-yellow-400' : 'hover:text-yellow-400'
-        } ${currentPage === 'menu' ? 'text-yellow-400 font-semibold' : ''}`}
+          isMobile ? 'text-white hover:text-amber-400' : 'hover:text-amber-400'
+        } ${currentPage === 'menu' ? 'text-amber-400 font-semibold' : ''}`}
         whileHover={{ scale: 1.1 }}
         onClick={() => onNavigate('menu')}
       >
         INICIO
         {currentPage === 'menu' && !isMobile && (
           <motion.div 
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400" 
+            className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-400" 
             layoutId="navbar-indicator"
             initial={{ width: 0 }}
             animate={{ width: '100%' }}
@@ -38,15 +38,15 @@ const NavItems: React.FC<NavItemsProps> = ({ onNavigate, currentPage, isMobile =
       
       <motion.button 
         className={`${baseButtonClasses} ${
-          isMobile ? 'text-white hover:text-yellow-400' : 'hover:text-yellow-400'
-        } ${currentPage === 'normativa' ? 'text-yellow-400 font-semibold' : ''}`}
+          isMobile ? 'text-white hover:text-amber-400' : 'hover:text-amber-400'
+        } ${currentPage === 'normativa' ? 'text-amber-400 font-semibold' : ''}`}
         whileHover={{ scale: 1.1 }}
         onClick={() => onNavigate('normativa')}
       >
         NORMATIVA
         {currentPage === 'normativa' && !isMobile && (
           <motion.div 
-            className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-400" 
+            className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-400" 
             layoutId="navbar-indicator"
             initial={{ width: 0 }}
             animate={{ width: '100%' }}
@@ -70,12 +70,12 @@ const NavItems: React.FC<NavItemsProps> = ({ onNavigate, currentPage, isMobile =
       </motion.a>
       
       <motion.button 
-        className={`${isMobile ? 'w-full ' : ''}border border-yellow-400 px-4 py-2 rounded transition-colors ${
+        className={`${isMobile ? 'w-full ' : ''}border border-amber-400 px-4 py-2 rounded transition-colors ${
           currentPage === 'whitelist' 
-            ? 'bg-yellow-400 text-black font-semibold' 
+            ? 'bg-amber-400 text-black font-semibold' 
             : isMobile
-              ? 'text-white hover:bg-yellow-400 hover:text-black'
-              : 'hover:bg-yellow-400 hover:text-black'
+              ? 'text-white hover:bg-amber-400 hover:text-black'
+              : 'hover:bg-amber-400 hover:text-black'
         }`}
         whileHover={{ scale: 1.05 }}
         onClick={() => onNavigate('whitelist')}
@@ -110,12 +110,12 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
           <div className="w-12 h-12 flex items-center justify-center">
             <img src="/images/logo.png" alt="Logo OldStreet" className="w-full h-full object-contain" />
           </div>
-          <h1 className="text-2xl font-bold text-yellow-400">OldStreet</h1>
+          <h1 className="text-2xl font-bold text-amber-400">OldStreet</h1>
         </motion.div>
 
         {/* Hamburger Menu Button (Mobile Only) */}
         <button 
-          className="lg:hidden text-yellow-400 p-2 hover:bg-yellow-400/10 rounded-lg"
+          className="lg:hidden text-amber-400 p-2 hover:bg-amber-400/10 rounded-lg"
           onClick={toggleMenu}
           aria-label="Menu"
         >
@@ -162,7 +162,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-gray-900/95 border-t border-yellow-400/20"
+            className="lg:hidden bg-gray-900/95 border-t border-amber-400/20"
           >
             <div className="flex flex-col items-center space-y-4 p-6">
               <NavItems 

@@ -114,7 +114,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
       
       {/* Línea dorada */}
       <motion.div 
-        className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-8"
+        className="h-px bg-gradient-to-r from-transparent via-amber-500 to-transparent mx-8"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 1, delay: 0.4 }}
@@ -122,7 +122,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
       
       <div className="flex-1 w-full flex flex-col items-center justify-center p-4">
         <motion.div 
-          className="rounded-xl shadow-2xl border-2 border-yellow-500 max-w-4xl w-full bg-black"
+          className="rounded-xl shadow-2xl border-2 border-amber-500 max-w-4xl w-full bg-black"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -136,12 +136,12 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
               transition={{ duration: 0.8, delay: 0.8 }}
             >
               <motion.h1 
-                className="text-4xl md:text-5xl font-bold mb-4 text-yellow-400"
+                className="text-4xl md:text-5xl font-bold mb-4 text-amber-400"
                 style={{
-                  textShadow: '0 0 20px rgba(255, 215, 0, 0.8)',
+                  textShadow: '0 0 20px rgba(245, 158, 11, 0.8)',
                 }}
                 whileHover={{
-                  textShadow: '0 0 30px rgba(255, 215, 0, 1)',
+                  textShadow: '0 0 30px rgba(245, 158, 11, 1)',
                 }}
               >
                 Solicitud de Whitelist
@@ -154,15 +154,15 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 1, delay: 1 }}
               >
-                <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent w-1/3"></div>
+                <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-1/3"></div>
                 <motion.div 
-                  className="mx-4 text-yellow-400 text-xl"
+                  className="mx-4 text-amber-400 text-xl"
                   animate={{ rotate: 360 }}
                   transition={{ duration: 8, repeat: Infinity }}
                 >
                   ✦
                 </motion.div>
-                <div className="h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent w-1/3"></div>
+                <div className="h-px bg-gradient-to-r from-transparent via-amber-400 to-transparent w-1/3"></div>
               </motion.div>
               
               <motion.p 
@@ -185,14 +185,14 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
             >
               {/* Información Personal */}
               <motion.div 
-                className="bg-gray-900/90 rounded-lg p-6 border-2 border-yellow-500/30"
+                className="bg-gray-900/90 rounded-lg p-6 border-2 border-amber-500/30"
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 1.6 }}
-                whileHover={{ borderColor: "rgba(255, 215, 0, 0.5)" }}
+                whileHover={{ borderColor: "rgba(245, 158, 11, 0.5)" }}
               >
                 <motion.h3 
-                  className="text-xl font-bold text-yellow-400 mb-4 flex items-center"
+                  className="text-xl font-bold text-amber-400 mb-4 flex items-center"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -218,7 +218,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       value={formData.discord}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="usuario#1234"
                     />
                   </motion.div>
@@ -241,7 +241,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       min="13"
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Tu edad"
                     />
                   </motion.div>
@@ -259,7 +259,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       value={formData.comoEncontrasteServidor}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                     >
                       <option value="" disabled className="bg-gray-900 text-gray-400">
                         Selecciona una opción...
@@ -286,14 +286,14 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
 
               {/* Experiencia */}
               <motion.div 
-                className="bg-gray-900/90 rounded-lg p-6 border-2 border-yellow-500/30"
+                className="bg-gray-900/90 rounded-lg p-6 border-2 border-amber-500/30"
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 2.1 }}
-                whileHover={{ borderColor: "rgba(255, 215, 0, 0.5)" }}
+                whileHover={{ borderColor: "rgba(245, 158, 11, 0.5)" }}
               >
                 <motion.h3 
-                  className="text-xl font-bold text-yellow-400 mb-4 flex items-center"
+                  className="text-xl font-bold text-amber-400 mb-4 flex items-center"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -316,7 +316,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Describe qué puedes aportar..."
                     />
                   </motion.div>
@@ -335,7 +335,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Menciona tus experiencias anteriores..."
                     />
                   </motion.div>
@@ -354,7 +354,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Convéncenos de por qué eres especial..."
                     />
                   </motion.div>
@@ -363,14 +363,14 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
 
               {/* Preguntas de Roleplay */}
               <motion.div 
-                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-yellow-500/30"
+                className="bg-gradient-to-br from-gray-900/80 to-black/80 rounded-xl p-6 border-2 border-amber-500/30"
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 2.5 }}
-                whileHover={{ borderColor: "rgba(255, 215, 0, 0.5)" }}
+                whileHover={{ borderColor: "rgba(245, 158, 11, 0.5)" }}
               >
                 <motion.h3 
-                  className="text-xl font-bold text-yellow-400 mb-4 flex items-center"
+                  className="text-xl font-bold text-amber-400 mb-4 flex items-center"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -393,7 +393,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Define qué es el roleplay para ti..."
                     />
                   </motion.div>
@@ -412,7 +412,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Explica qué es lo más importante..."
                     />
                   </motion.div>
@@ -431,7 +431,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Menciona 2 conceptos poco comunes..."
                     />
                   </motion.div>
@@ -440,14 +440,14 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
 
               {/* Situaciones de Roleplay */}
               <motion.div 
-                className="bg-gray-900/90 rounded-lg p-6 border-2 border-yellow-500/30"
+                className="bg-gray-900/90 rounded-lg p-6 border-2 border-amber-500/30"
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 2.8 }}
-                whileHover={{ borderColor: "rgba(255, 215, 0, 0.5)" }}
+                whileHover={{ borderColor: "rgba(245, 158, 11, 0.5)" }}
               >
                 <motion.h3 
-                  className="text-xl font-bold text-yellow-400 mb-4 flex items-center"
+                  className="text-xl font-bold text-amber-400 mb-4 flex items-center"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -470,7 +470,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Explica qué está mal en esta situación..."
                     />
                   </motion.div>
@@ -489,7 +489,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Explica qué está mal en esta situación..."
                     />
                   </motion.div>
@@ -508,7 +508,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Describe cómo actuarías..."
                     />
                   </motion.div>
@@ -527,7 +527,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Explica qué está mal en esta situación..."
                     />
                   </motion.div>
@@ -536,14 +536,14 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
 
               {/* Preguntas Técnicas */}
               <motion.div 
-                className="bg-gray-900/90 rounded-lg p-6 border-2 border-yellow-500/30"
+                className="bg-gray-900/90 rounded-lg p-6 border-2 border-amber-500/30"
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 3.1 }}
-                whileHover={{ borderColor: "rgba(255, 215, 0, 0.5)" }}
+                whileHover={{ borderColor: "rgba(245, 158, 11, 0.5)" }}
               >
                 <motion.h3 
-                  className="text-xl font-bold text-yellow-400 mb-4 flex items-center"
+                  className="text-xl font-bold text-amber-400 mb-4 flex items-center"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -566,7 +566,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Define qué es Fair-play..."
                     />
                   </motion.div>
@@ -585,7 +585,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Responde sobre el uso de 'músculo' y cómo comunicar teclas..."
                     />
                   </motion.div>
@@ -604,7 +604,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={2}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Explica para qué sirve el comando /do..."
                     />
                   </motion.div>
@@ -623,7 +623,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Escribe 2 ejemplos diferentes de /entorno..."
                     />
                   </motion.div>
@@ -642,7 +642,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Explica qué es el rol de entorno..."
                     />
                   </motion.div>
@@ -661,7 +661,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={4}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Explica los protocolos para situaciones extremas..."
                     />
                   </motion.div>
@@ -670,14 +670,14 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
 
               {/* Información del Personaje */}
               <motion.div 
-                className="bg-gray-900/90 rounded-lg p-6 border-2 border-yellow-500/30"
+                className="bg-gray-900/90 rounded-lg p-6 border-2 border-amber-500/30"
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 3.4 }}
-                whileHover={{ borderColor: "rgba(255, 215, 0, 0.5)" }}
+                whileHover={{ borderColor: "rgba(245, 158, 11, 0.5)" }}
               >
                 <motion.h3 
-                  className="text-xl font-bold text-yellow-400 mb-4 flex items-center"
+                  className="text-xl font-bold text-amber-400 mb-4 flex items-center"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -700,7 +700,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       value={formData.nombrePersonaje}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Nombre y apellido del personaje"
                     />
                   </motion.div>
@@ -722,7 +722,7 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                       onChange={handleInputChange}
                       required
                       rows={6}
-                      className="w-full px-3 py-2 bg-gray-900/50 border border-yellow-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20"
+                      className="w-full px-3 py-2 bg-gray-900/50 border border-amber-500/30 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20"
                       placeholder="Cuenta la historia presente de tu personaje..."
                     />
                   </motion.div>
@@ -731,14 +731,14 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
 
               {/* Dificultad y Términos */}
               <motion.div 
-                className="bg-gray-900/90 rounded-lg p-6 border-2 border-yellow-500/30"
+                className="bg-gray-900/90 rounded-lg p-6 border-2 border-amber-500/30"
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 4.0 }}
-                whileHover={{ borderColor: "rgba(255, 215, 0, 0.5)" }}
+                whileHover={{ borderColor: "rgba(245, 158, 11, 0.5)" }}
               >
                 <motion.h3 
-                  className="text-xl font-bold text-yellow-400 mb-4 flex items-center"
+                  className="text-xl font-bold text-amber-400 mb-4 flex items-center"
                   whileHover={{ x: 5 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -765,10 +765,10 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                         onChange={handleInputChange}
                         className="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
                         style={{
-                          background: `linear-gradient(to right, #eab308 0%, #eab308 ${(parseInt(formData.dificultadWhitelist) / 10) * 100}%, #374151 ${(parseInt(formData.dificultadWhitelist) / 10) * 100}%, #374151 100%)`
+                          background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${(parseInt(formData.dificultadWhitelist) / 10) * 100}%, #374151 ${(parseInt(formData.dificultadWhitelist) / 10) * 100}%, #374151 100%)`
                         }}
                       />
-                      <span className="text-yellow-400 font-bold text-lg min-w-[2rem]">
+                      <span className="text-amber-400 font-bold text-lg min-w-[2rem]">
                         {formData.dificultadWhitelist}
                       </span>
                     </div>
@@ -786,11 +786,11 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                         checked={formData.aceptarNormativa}
                         onChange={(e) => setFormData(prev => ({ ...prev, aceptarNormativa: e.target.checked }))
                         }
-                        className="mt-1 w-5 h-5 text-yellow-400 bg-gray-800 border-gray-600 rounded focus:ring-yellow-400 focus:ring-2"
+                        className="mt-1 w-5 h-5 text-amber-400 bg-gray-800 border-gray-600 rounded focus:ring-amber-400 focus:ring-2"
                         required
                       />
                       <label className="text-sm text-gray-300">
-                        <span className="text-yellow-400">*</span> Acepto la normativa, los derechos de la comunidad y mis derechos como usuario.
+                        <span className="text-amber-400">*</span> Acepto la normativa, los derechos de la comunidad y mis derechos como usuario.
                       </label>
                     </div>
                   </motion.div>
@@ -807,11 +807,11 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                         checked={formData.aceptarRevision}
                         onChange={(e) => setFormData(prev => ({ ...prev, aceptarRevision: e.target.checked }))
                         }
-                        className="mt-1 w-5 h-5 text-yellow-400 bg-gray-800 border-gray-600 rounded focus:ring-yellow-400 focus:ring-2"
+                        className="mt-1 w-5 h-5 text-amber-400 bg-gray-800 border-gray-600 rounded focus:ring-amber-400 focus:ring-2"
                         required
                       />
                       <label className="text-sm text-gray-300">
-                        <span className="text-yellow-400">*</span> Acepto que la whitelist podrá ser revisada con una espera de tiempo, ya que se corrigen a mano por un STAFF.
+                        <span className="text-amber-400">*</span> Acepto que la whitelist podrá ser revisada con una espera de tiempo, ya que se corrigen a mano por un STAFF.
                       </label>
                     </div>
                   </motion.div>
@@ -845,19 +845,19 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                 <motion.button 
                   type="submit"
                   disabled={isSubmitting}
-                  className={`bg-gradient-to-r ${isSubmitting ? 'from-gray-600 to-gray-700' : 'from-yellow-600 to-yellow-700'} text-white font-bold py-3 px-8 rounded-lg shadow-lg border-2 ${isSubmitting ? 'border-gray-500' : 'border-yellow-500'} relative overflow-hidden ${isSubmitting ? 'cursor-not-allowed' : ''}`}
+                  className={`bg-gradient-to-r ${isSubmitting ? 'from-gray-600 to-gray-700' : 'from-amber-600 to-amber-700'} text-white font-bold py-3 px-8 rounded-lg shadow-lg border-2 ${isSubmitting ? 'border-gray-500' : 'border-amber-500'} relative overflow-hidden ${isSubmitting ? 'cursor-not-allowed' : ''}`}
                   style={{
-                    boxShadow: isSubmitting ? '0 0 20px rgba(156, 163, 175, 0.3)' : '0 0 20px rgba(255, 215, 0, 0.3)',
+                    boxShadow: isSubmitting ? '0 0 20px rgba(156, 163, 175, 0.3)' : '0 0 20px rgba(245, 158, 11, 0.3)',
                     textShadow: '0 0 10px rgba(0, 0, 0, 0.5)'
                   }}
                   whileHover={!isSubmitting ? {
                     scale: 1.05,
-                    boxShadow: "0 0 30px rgba(255, 215, 0, 0.5)",
+                    boxShadow: "0 0 30px rgba(245, 158, 11, 0.5)",
                   } : {}}
                   whileTap={!isSubmitting ? { scale: 0.95 } : {}}
                 >
                   <motion.div 
-                    className={`absolute inset-0 bg-gradient-to-r ${isSubmitting ? 'from-gray-400 to-gray-500' : 'from-yellow-400 to-yellow-600'} opacity-0`}
+                    className={`absolute inset-0 bg-gradient-to-r ${isSubmitting ? 'from-gray-400 to-gray-500' : 'from-amber-400 to-amber-600'} opacity-0`}
                     whileHover={!isSubmitting ? { opacity: 0.2 } : {}}
                   />
                   <span className="relative z-10">
