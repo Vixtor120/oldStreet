@@ -38,8 +38,8 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
       const formData = new FormData();
       formData.append('email', email);
 
-      // TEMPORAL: Usar endpoint de debug
-      const response = await fetch('/auth/request_password_reset_debug.php', {
+      // TEMPORAL: Debug específico de base de datos
+      const response = await fetch('/auth/request_password_reset_db_debug.php', {
         method: 'POST',
         body: formData,
       });
@@ -52,6 +52,12 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
           title: 'Email enviado',
           message: data.message
         });
+        
+        // Si hay info de debug, mostrarla en consola
+        if (data.debug) {
+          console.log('Debug info:', data.debug);
+        }
+        
         setEmail('');
         onClose();
       } else {
@@ -60,13 +66,19 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
           title: 'Error',
           message: data.message || 'Error al enviar el email'
         });
+        
+        // Mostrar debug info en consola para troubleshooting
+        if (data.debug) {
+          console.error('Debug info:', data.debug);
+        }
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error completo:', error);
+      
       showNotification({
         type: 'error',
         title: 'Error de conexión',
-        message: 'Error de conexión. Intenta nuevamente.'
+        message: 'Error de conexión o respuesta inválida del servidor. Revisa la consola para más detalles.'
       });
     } finally {
       setIsLoading(false);

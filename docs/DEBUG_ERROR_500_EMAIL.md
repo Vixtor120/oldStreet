@@ -120,3 +120,41 @@ Cuando pruebes, anota:
 4. **Rebuild y subir versión final**
 
 El endpoint de debug te dará toda la información necesaria para identificar exactamente qué está fallando.
+
+## 🚨 ACTUALIZACIÓN: Error de JSON Detectado
+
+Si ves error: `Unexpected token '<', "<br /><b>"... is not valid JSON`
+
+Esto significa que PHP está devolviendo HTML (warnings/errors) en lugar de JSON.
+
+### Nueva Versión Ultra-Simple:
+Hemos creado `request_password_reset_simple.php` que:
+- ✅ Suprime todos los warnings de PHP
+- ✅ Captura cualquier output no deseado
+- ✅ Devuelve JSON limpio siempre
+- ✅ Proporciona debug detallado paso a paso
+
+### Para probar:
+1. **Sube el archivo:** `public/auth/request_password_reset_simple.php`
+2. **Sube la nueva build:** `dist/` completo
+3. **Prueba el modal** de ¿Olvidaste tu contraseña?
+4. **Abre la consola (F12)** y revisa los logs de debug
+
+### Lo que verás en la consola:
+```json
+{
+  "success": true/false,
+  "message": "...",
+  "debug": {
+    "step": "current_step",
+    "email_received": true/false,
+    "files": {"env_loader": true, "auth_system": true},
+    "env_vars": {"DB_HOST": "SET", "DB_NAME": "SET"},
+    "user_found": true/false,
+    "token": "abcd123...",
+    "reset_link": "https://..."
+  }
+}
+```
+
+Este debug te dirá exactamente en qué paso está fallando.
