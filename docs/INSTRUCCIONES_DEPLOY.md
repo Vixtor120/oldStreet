@@ -132,3 +132,64 @@ curl -X POST https://tu-dominio.com/auth/debug_session.php \
    php_value session.cookie_lifetime 86400
    php_value session.gc_maxlifetime 86400
    ```
+
+## 🆕 NUEVO: Sistema de Recuperación de Contraseñas
+
+Esta versión incluye un sistema completo de recuperación de contraseñas por email:
+
+### ✨ Características:
+- **Solicitud por email**: Los usuarios pueden solicitar un enlace de recuperación
+- **Tokens seguros**: Enlaces únicos con expiración de 1 hora
+- **Emails elegantes**: Plantillas HTML profesionales con diseño acorde al sitio
+- **Validación robusta**: Verificación de tokens y prevención de reutilización
+- **Integración perfecta**: Modal integrado en el sistema de autenticación existente
+
+### 📧 Configuración de Email:
+
+Debes configurar las variables de email en tu archivo `.env`:
+
+```env
+# Configuración SMTP (ejemplo con Gmail)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_SECURE=tls
+SMTP_USERNAME=tu_email@gmail.com
+SMTP_PASSWORD=tu_app_password_gmail
+SMTP_FROM_EMAIL=noreply@oldstreet.com
+SMTP_FROM_NAME=OldStreet RP
+SITE_URL=https://tu-dominio.com
+```
+
+**Nota para Gmail:** Necesitas generar una "Contraseña de aplicación" en tu cuenta de Google para usar SMTP.
+
+### 🔄 Flujo de Recuperación:
+
+1. Usuario hace clic en "¿Olvidaste tu contraseña?" en el login
+2. Ingresa su email y recibe un enlace por correo
+3. El enlace lo lleva a `/reset-password?token=...`
+4. Ingresa nueva contraseña y confirma
+5. Se actualiza la contraseña y se invalidan todas las sesiones
+
+### 📁 Archivos Nuevos:
+
+- `public/auth/request_password_reset.php` - Generar y enviar tokens
+- `public/auth/reset_password.php` - Validar tokens y cambiar contraseñas  
+- `src/components/ForgotPasswordModal.tsx` - Modal para solicitar recuperación
+- `src/pages/ResetPassword.tsx` - Página para cambiar contraseña
+- Tabla `password_reset_tokens` en la base de datos
+
+## Problemas comunes:
+- **Si no llega el email de recuperación**:
+  - Verifica la configuración SMTP en el archivo `.env`
+  - Revisa los logs de errores para detectar problemas en el envío
+  - Asegúrate de que el servidor tenga acceso a internet y no esté bloqueado por un firewall
+
+- **Si el token de recuperación no es válido**:
+  - Asegúrate de que la URL copiada sea la correcta y completa
+  - Verifica que el token no haya expirado (los tokens expiran en 1 hora)
+  - Revisa la base de datos para confirmar que el token existe y está activo
+
+- **Si hay errores al restablecer la contraseña**:
+  - Asegúrate de que la nueva contraseña cumpla con los requisitos de seguridad
+  - Verifica que el formulario de restablecimiento esté enviando los datos correctamente
+  - Revisa los logs de errores para más detalles sobre el problema

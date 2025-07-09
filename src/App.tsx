@@ -6,15 +6,26 @@ import Menu from './pages/Menu';
 import Normativa from './pages/Normativa';
 import Postulaciones from './pages/Postulaciones';
 import Whitelist from './pages/Whitelist';
+import ResetPassword from './pages/ResetPassword';
 import AuthModal from './components/AuthModal';
 
 const AppContent: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist' | 'reset-password'>('home');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   
   const { user, loading } = useAuth();
   const { showWarning, showError } = useNotifications();
+
+  // Detectar si estamos en la página de reset-password
+  useEffect(() => {
+    const urlPath = window.location.pathname;
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    if (urlPath === '/reset-password' || urlParams.has('token')) {
+      setCurrentPage('reset-password');
+    }
+  }, []);
 
   // Scroll to top whenever the page changes
   useEffect(() => {
@@ -73,6 +84,8 @@ const AppContent: React.FC = () => {
         return <Postulaciones onNavigate={handleNavigate} />;
       case 'whitelist':
         return <Whitelist onNavigate={handleNavigate} />;
+      case 'reset-password':
+        return <ResetPassword />;
       default:
         return <Home onNavigate={handleNavigate} />;
     }

@@ -92,6 +92,18 @@ class AuthSystem {
         return $user_id;
     }
 
+    /**
+     * Obtener usuario por email
+     */
+    public function getUserByEmail($email) {
+        $query = "SELECT * FROM users WHERE email = ? AND is_active = TRUE";
+        $stmt = $this->db->prepare($query);
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
     public function login($identifier, $password) {
         $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
         
@@ -294,16 +306,16 @@ class AuthSystem {
     }
 
     private function checkLoginAttempts($ip_address) {
-        // Verificar intentos fallidos en la última hora
+        // Verificar intentos fallidos en el último minuto
         $stmt = $this->db->prepare("
             SELECT COUNT(*) FROM login_attempts 
-            WHERE ip_address = ? AND success = 0 AND attempted_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+            WHERE ip_address = ? AND success = 0 AND attempted_at > DATE_SUB(NOW(), INTERVAL 1 MINUTE)
         ");
         $stmt->execute([$ip_address]);
         $failed_attempts = $stmt->fetchColumn();
 
         if ($failed_attempts >= 5) {
-            throw new Exception("Demasiados intentos fallidos. Intenta de nuevo en una hora.");
+            throw new Exception("Demasiados intentos fallidos. Intenta de nuevo en 1 minuto.");
         }
     }
 

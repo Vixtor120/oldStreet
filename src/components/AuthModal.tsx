@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface AuthModalProps {
 
 const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login' }) => {
   const [mode, setMode] = useState<'login' | 'register'>(initialMode);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     username: '',
@@ -228,6 +230,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
                 ? '¿No tienes cuenta? Regístrate aquí' 
                 : '¿Ya tienes cuenta? Inicia sesión'}
             </button>
+            
+            {mode === 'login' && (
+              <div className="mt-2">
+                <button
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-gray-400 hover:text-amber-400 transition-colors text-xs underline"
+                  disabled={loading}
+                >
+                  ¿Olvidaste tu contraseña?
+                </button>
+              </div>
+            )}
           </div>
 
           {mode === 'register' && (
@@ -237,6 +251,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
                 Asegúrate de estar en el servidor de OldStreet.
               </p>
             </div>
+          )}
+
+          {showForgotPassword && (
+            <ForgotPasswordModal 
+              isOpen={showForgotPassword}
+              onClose={() => setShowForgotPassword(false)}
+            />
           )}
         </motion.div>
       </div>
