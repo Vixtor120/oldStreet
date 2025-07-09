@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import { useNotifications } from '../context/NotificationContext';
+import Modal from '../components/Modal';
 
 interface WhitelistProps {
-  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'whitelist') => void;
+  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist') => void;
 }
 
 const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'success' | 'error' | 'warning'>('success');
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const { showSuccess, showError, showWarning } = useNotifications();
   const [formData, setFormData] = useState({
     // Información Personal
     discord: '',
@@ -49,6 +56,8 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
     aceptarRevision: false
   });
 
+  const [previousRejection, setPreviousRejection] = useState<{date: string, reason: string} | null>(null);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -67,30 +76,52 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
         body: JSON.stringify(formData),
       });
 
-      // Check if response is ok
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
       // Get the response text first to check if it's valid JSON
       const responseText = await response.text();
       
       // Log the raw response for debugging
       console.log('Raw response:', responseText);
       
+      // Intentar parsear la respuesta como JSON
       let result;
       try {
         result = JSON.parse(responseText);
       } catch (jsonError) {
         console.error('JSON Parse Error:', jsonError);
         console.error('Response was:', responseText);
-        throw new Error('La respuesta del servidor no es válida. Por favor, contacta al administrador.');
+        
+        // Si la respuesta no es JSON válido, pero contiene un mensaje de error, intentamos extraerlo
+        if (responseText.includes('Ya tienes una solicitud de whitelist pendiente')) {
+          const match = responseText.match(/Ya tienes una solicitud de whitelist pendiente enviada el ([^\.]+)/);
+          const fecha = match ? match[1] : 'fecha desconocida';
+          throw new Error(`Ya tienes una solicitud de whitelist pendiente enviada el ${fecha}. Por favor, espera a que el staff la revise antes de enviar otra.`);
+        } else if (responseText.includes('error') || responseText.includes('Error')) {
+          throw new Error('Error en el servidor. Por favor, contacta al administrador.');
+        } else {
+          throw new Error('La respuesta del servidor no es válida. Por favor, contacta al administrador.');
+        }
       }
 
       console.log('Respuesta completa del servidor:', result);
       
+      // Siempre verificamos si hay información de rechazo previa, incluso si hay un error
+      if (result && result.debug_info && result.debug_info.previous_rejection) {
+        setPreviousRejection(result.debug_info.previous_rejection);
+      }
+      
+      // Verificar si hay errores
+      if (!response.ok || (result && result.error)) {
+        throw new Error((result && result.message) ? result.message : `Error del servidor: ${response.status}`);
+      }
+      
       if (result.success) {
-        alert('¡Solicitud enviada exitosamente! Te contactaremos pronto!');
+        // Mostrar notificación de éxito
+        showSuccess(
+          '¡Solicitud Enviada!',
+          'Tu solicitud de whitelist ha sido enviada correctamente. El equipo de OldStreet revisará tu solicitud y te notificará en Discord.\n\n¡Mantente atento a Discord para novedades!',
+          { duration: 6000 }
+        );
+
         // Reiniciar formulario
         setFormData({
           discord: '',
@@ -119,20 +150,27 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
           aceptarNormativa: false,
           aceptarRevision: false
         });
-      } else {
-        throw new Error(result.message || 'Error al enviar la solicitud');
+        setPreviousRejection(null);
       }
     } catch (error) {
       console.error('Error completo:', error);
       
       // Show more detailed error information
       let errorMessage = 'Error al enviar la solicitud. Por favor, inténtalo de nuevo.';
+      let isPendingWhitelist = false;
       
       if (error instanceof Error) {
         errorMessage = error.message;
+        // Detectar si es un error de whitelist ya pendiente
+        isPendingWhitelist = errorMessage.includes('Ya tienes una solicitud de whitelist pendiente');
       }
       
-      alert(errorMessage);
+      // Configurar notificación según el tipo de error
+      if (isPendingWhitelist) {
+        showWarning('Solicitud Pendiente', errorMessage, { autoClose: false });
+      } else {
+        showError('Error', errorMessage, { autoClose: false });
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -199,10 +237,34 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                 className="text-gray-300 text-lg max-w-3xl mx-auto"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.6, delay: 1.2 }}
+                transition={{ duration: 0.8, delay: 1 }}
               >
-                Complete el formulario para solicitar acceso a nuestro servidor de roleplay
+                Para formar parte de OldStreet, necesitas pasar nuestra whitelist. Por favor, responde todas las preguntas con honestidad y detalle.
               </motion.p>
+              
+              {/* Mensaje de rechazo anterior si existe */}
+              {previousRejection && (
+                <motion.div 
+                  className="bg-red-900 bg-opacity-30 border-2 border-red-600 text-white p-4 rounded-lg mt-6 mb-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <h3 className="text-red-400 font-bold text-lg mb-2">⚠️ Tu whitelist anterior fue rechazada</h3>
+                  <p className="text-gray-200">
+                    Fecha del rechazo: <span className="text-red-300">{previousRejection.date}</span>
+                  </p>
+                  <p className="text-gray-200 mt-2">
+                    <strong className="text-red-300">Motivo:</strong>
+                  </p>
+                  <p className="bg-black bg-opacity-30 p-3 rounded mt-1 text-gray-300 border-l-2 border-red-500">
+                    {previousRejection.reason}
+                  </p>
+                  <p className="mt-3 text-gray-300">
+                    Por favor, considera los comentarios anteriores al volver a enviar tu solicitud.
+                  </p>
+                </motion.div>
+              )}
             </motion.div>
 
             {/* Formulario */}
@@ -878,6 +940,26 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
                 </div>
               </motion.div>
 
+              {/* Mensaje de rechazo previo */}
+              {previousRejection && (
+                <motion.div 
+                  className="bg-red-900/90 rounded-lg p-6 border-2 border-red-500/30"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <p className="text-red-300 text-sm mb-2">
+                    ⚠️ Tu solicitud anterior fue rechazada el {new Date(previousRejection.date).toLocaleDateString()}.
+                  </p>
+                  <p className="text-red-300 text-sm mb-4">
+                    Motivo: <span className="font-semibold">{previousRejection.reason}</span>
+                  </p>
+                  <p className="text-gray-300 text-sm">
+                    Asegúrate de corregir los errores mencionados antes de volver a enviar la solicitud.
+                  </p>
+                </motion.div>
+              )}
+
               {/* Botones */}
               <motion.div 
                 className="flex justify-center space-x-4 pt-4"
@@ -929,6 +1011,22 @@ const Whitelist: React.FC<WhitelistProps> = ({ onNavigate }) => {
           </div>
         </motion.div>
       </div>
+      
+      {/* Modal para mensajes de éxito y error */}
+      <Modal 
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          // Si el modal que se está cerrando es de éxito, redirigir al menú
+          if (modalType === 'success') {
+            onNavigate('menu');
+          }
+        }}
+        type={modalType}
+        title={modalTitle}
+        message={modalMessage}
+        buttonText="Entendido"
+      />
     </div>
   );
 };

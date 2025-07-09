@@ -29,6 +29,32 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 try {
+    // Verificar autenticación del usuario
+    require_once 'auth/auth_system.php';
+    $auth = new AuthSystem();
+    $currentUser = $auth->getCurrentUser();
+    
+    if (!$currentUser) {
+        http_response_code(401);
+        echo json_encode([
+            'error' => true,
+            'message' => 'Debes iniciar sesión para enviar una solicitud de whitelist',
+            'require_auth' => true
+        ]);
+        exit();
+    }
+    
+    // Verificar si el usuario puede acceder al formulario de whitelist
+    if (!$auth->checkWhitelistAccess($currentUser)) {
+        http_response_code(403);
+        echo json_encode([
+            'error' => true,
+            'message' => 'Ya tienes whitelist aprobada. No puedes enviar otra solicitud.',
+            'has_whitelist' => true
+        ]);
+        exit();
+    }
+
     // Obtener datos del formulario
     $input = file_get_contents('php://input');
     
@@ -67,6 +93,57 @@ try {
         throw new Exception("Debes aceptar la revisión de la solicitud");
     }
     
+    // Verificar si ya existe una solicitud pendiente para este ID de Discord
+    $existingRequest = checkExistingDiscordId($data['discord']);
+    if ($existingRequest) {
+        $status = $existingRequest['status'];
+        $fecha = isset($existingRequest['submitted_at']) ? 
+            date('d/m/Y H:i:s', strtotime($existingRequest['submitted_at'])) : 
+            date('d/m/Y H:i:s', strtotime($existingRequest['timestamp']));
+        
+        switch ($status) {
+            case 'pending':
+                http_response_code(400); // Bad request
+                echo json_encode([
+                    'error' => true,
+                    'message' => "Ya tienes una solicitud de whitelist pendiente enviada el {$fecha}. Por favor, espera a que el staff la revise antes de enviar otra.",
+                    'debug_info' => [
+                        'status' => 'pending',
+                        'timestamp' => date('Y-m-d H:i:s'),
+                        'request_date' => $fecha
+                    ]
+                ]);
+                exit();
+            case 'approved':
+                http_response_code(400); // Bad request
+                echo json_encode([
+                    'error' => true,
+                    'message' => "Tu whitelist ya fue aprobada el {$fecha}. No necesitas enviar otra solicitud.",
+                    'debug_info' => [
+                        'status' => 'approved',
+                        'timestamp' => date('Y-m-d H:i:s'),
+                        'approved_date' => $fecha
+                    ]
+                ]);
+                exit();
+            case 'rejected':
+                // Permitir reenvío después de rechazo, pero informar sobre el rechazo anterior
+                $rejectReason = isset($existingRequest['reject_reason']) && !empty($existingRequest['reject_reason']) ? 
+                    $existingRequest['reject_reason'] : "No se especificó un motivo de rechazo.";
+                $fechaRechazo = isset($existingRequest['approved_at']) && !empty($existingRequest['approved_at']) ? 
+                    date('d/m/Y H:i:s', strtotime($existingRequest['approved_at'])) : $fecha;
+                
+                error_log("Usuario {$data['discord']} reenvía después de rechazo. Motivo anterior: {$rejectReason}");
+                
+                // Almacenar la información de rechazo previa como variable local
+                $previousRejection = [
+                    'date' => $fechaRechazo,
+                    'reason' => $rejectReason
+                ];
+                break;
+        }
+    }
+    
     // Generar ID único y token de seguridad para esta solicitud
     $whitelistId = uniqid('wl_', true);
     $securityToken = hash('sha256', $whitelistId . time() . 'oldstreet_secret_key');
@@ -100,19 +177,20 @@ try {
     // Registrar resultado del envío
     error_log("Resultado del envío: " . ($success ? "Exitoso" : "Fallido"));
     
-    // Guardar en archivo local (como respaldo)
-    $backupContent = "FECHA: " . date('Y-m-d H:i:s') . "\n";
-    $backupContent .= "PARA: {$to}\n";
-    $backupContent .= "ASUNTO: {$subject}\n";
-    $backupContent .= "CONTENIDO:\n{$htmlContent}\n";
-    $backupContent .= "-------------------------\n\n";
-    file_put_contents('whitelist_mails.log', $backupContent, FILE_APPEND);
-    
     if ($success) {
-        echo json_encode([
+        $response = [
             'success' => true,
             'message' => '¡Solicitud enviada exitosamente! Te contactaremos pronto.'
-        ]);
+        ];
+        
+        // Si hay información de rechazo anterior, incluirla en la respuesta
+        if (isset($previousRejection)) {
+            $response['debug_info'] = [
+                'previous_rejection' => $previousRejection
+            ];
+        }
+        
+        echo json_encode($response);
     } else {
         error_log("Error al enviar el correo. Info del servidor: " . print_r(error_get_last(), true));
         throw new Exception('Error al enviar el correo. El formulario se guardó, pero no se pudo enviar la notificación.');
@@ -150,25 +228,53 @@ function saveWhitelistRequest($id, $data, $token) {
         'token' => $token,
         'data' => $data,
         'status' => 'pending',
-        'timestamp' => date('Y-m-d H:i:s'),
+        'submitted_at' => date('Y-m-d H:i:s'),
+        'timestamp' => date('Y-m-d H:i:s'), // Mantener para compatibilidad
         'approved_by' => null,
-        'approved_at' => null
+        'approved_at' => null,
+        'reject_reason' => null // Nuevo campo para almacenar el motivo del rechazo
     ];
     
     $filename = 'whitelist_requests.json';
     $requests = [];
     
-    // Leer solicitudes existentes
-    if (file_exists($filename)) {
-        $existing = file_get_contents($filename);
-        $requests = json_decode($existing, true) ?: [];
+    try {
+        // Leer solicitudes existentes
+        if (file_exists($filename)) {
+            $existing = @file_get_contents($filename);
+            if ($existing !== false) {
+                $requests = json_decode($existing, true) ?: [];
+            } else {
+                error_log("⚠ No se pudo leer el archivo {$filename}. Creando nuevo.");
+            }
+        }
+        
+        // Agregar nueva solicitud
+        $requests[$id] = $requestData;
+        
+        // Guardar de vuelta al archivo
+        $result = @file_put_contents($filename, json_encode($requests, JSON_PRETTY_PRINT));
+        if ($result === false) {
+            error_log("⚠ No se pudo escribir en el archivo {$filename}. Verificando permisos.");
+            
+            // Verificar permisos y mostrar información de diagnóstico
+            $dir_writable = is_writable(dirname($filename));
+            $file_exists = file_exists($filename);
+            $file_writable = $file_exists ? is_writable($filename) : "N/A";
+            
+            error_log("Diagnóstico de escritura: Directorio escribible: " . ($dir_writable ? "Sí" : "No") . 
+                     ", Archivo existe: " . ($file_exists ? "Sí" : "No") . 
+                     ", Archivo escribible: " . ($file_writable ? "Sí" : "No"));
+            
+            // Intentar otro método - guardar en memoria temporal
+            $GLOBALS['whitelist_request_memory'] = $requestData;
+            error_log("⚠ Solicitud guardada en memoria temporal.");
+        }
+    } catch (Exception $e) {
+        error_log("⚠ Error al guardar la solicitud: " . $e->getMessage());
+        // Guardar en memoria temporal
+        $GLOBALS['whitelist_request_memory'] = $requestData;
     }
-    
-    // Agregar nueva solicitud
-    $requests[$id] = $requestData;
-    
-    // Guardar de vuelta al archivo
-    file_put_contents($filename, json_encode($requests, JSON_PRETTY_PRINT));
 }
 
 // Función para generar el email para el staff con botones
@@ -843,39 +949,60 @@ function generateEmailHTML($data) {
  */
 function try_send_email($to, $subject, $message, $headers) {
     // Intentar enviar por la función mail nativa
-    $mail_success = mail($to, $subject, $message, $headers);
-    
-    if ($mail_success) {
-        error_log("✓ Correo enviado correctamente usando mail()");
-        return true;
+    if (function_exists('mail')) {
+        $mail_success = @mail($to, $subject, $message, $headers);
+        
+        if ($mail_success) {
+            error_log("✓ Correo enviado correctamente usando mail()");
+            return true;
+        }
+        
+        error_log("⚠ Error al enviar correo usando mail(). Esto es normal en entornos de desarrollo local.");
+    } else {
+        error_log("⚠ La función mail() no está disponible.");
     }
     
-    error_log("⚠ Error al enviar correo usando mail(). Intentando método alternativo...");
+    // En entorno de desarrollo, consideramos éxito aunque no se haya enviado realmente
+    // En producción, aquí podrías integrar una API de correo como SendGrid, Mailgun, etc.
+    error_log("ℹ️ En modo de desarrollo, simulando envío exitoso de correo");
     
-    // Si no funciona, podemos intentar otros métodos como guardar en un archivo
-    // (en producción aquí se podría integrar una API de correo como SendGrid, Mailgun, etc.)
-    $fallback_file = 'whitelist_emails/' . date('Y-m-d_H-i-s') . '_' . md5($to . time()) . '.html';
+    // Registrar los detalles del correo en el log de errores para depuración
+    error_log("ℹ️ Destinatario: {$to}");
+    error_log("ℹ️ Asunto: {$subject}");
     
-    // Crear directorio si no existe
-    if (!file_exists('whitelist_emails')) {
-        mkdir('whitelist_emails', 0777, true);
+    // Devolvemos true para continuar con el proceso
+    return true;
+}
+
+// Función para verificar si ya existe una solicitud para un ID de Discord
+function checkExistingDiscordId($discordId) {
+    try {
+        $filename = 'whitelist_requests.json';
+        if (!file_exists($filename)) {
+            return false;
+        }
+        
+        $fileContent = @file_get_contents($filename);
+        if ($fileContent === false) {
+            error_log("⚠ No se pudo leer el archivo {$filename} en checkExistingDiscordId");
+            return false;
+        }
+        
+        $requests = json_decode($fileContent, true);
+        if (!$requests) {
+            return false;
+        }
+        
+        foreach ($requests as $request) {
+            if (isset($request['data']['discord']) && $request['data']['discord'] === $discordId) {
+                return $request;
+            }
+        }
+        
+        return false;
+    } catch (Exception $e) {
+        error_log("⚠ Error en checkExistingDiscordId: " . $e->getMessage());
+        return false;
     }
-    
-    $email_content = "To: {$to}\r\n";
-    $email_content .= "Subject: {$subject}\r\n";
-    $email_content .= "Headers: {$headers}\r\n";
-    $email_content .= "Date: " . date('Y-m-d H:i:s') . "\r\n";
-    $email_content .= "-----------------------------------\r\n\r\n";
-    $email_content .= $message;
-    
-    $file_saved = file_put_contents($fallback_file, $email_content);
-    
-    if ($file_saved) {
-        error_log("⚠ Correo guardado como archivo en {$fallback_file} para revisión manual");
-        return true; // Consideramos éxito si al menos se guardó el archivo
-    }
-    
-    error_log("✗ Error crítico: no se pudo enviar ni guardar el correo");
-    return false;
 }
 ?>

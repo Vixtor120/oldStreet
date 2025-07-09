@@ -1,26 +1,30 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
-  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'whitelist') => void;
-  currentPage: 'home' | 'menu' | 'normativa' | 'whitelist';
+  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist') => void;
+  currentPage: 'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist';
 }
 
 // NavItems component to avoid code duplication
 interface NavItemsProps extends Omit<NavbarProps, 'currentPage'> {
-  currentPage: 'home' | 'menu' | 'normativa' | 'whitelist';
+  currentPage: 'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist';
   isMobile?: boolean;
 }
 
 const NavItems: React.FC<NavItemsProps> = ({ onNavigate, currentPage, isMobile = false }) => {
+  const { user, logout } = useAuth();
   const baseButtonClasses = `transition-colors relative ${isMobile ? 'w-full text-center py-2' : ''}`;
   
   return (
     <>
       <motion.button 
         className={`${baseButtonClasses} ${
-          isMobile ? 'text-white hover:text-amber-400' : 'hover:text-amber-400'
-        } ${currentPage === 'menu' ? 'text-amber-400 font-semibold' : ''}`}
+          currentPage === 'menu' 
+            ? 'text-amber-400 font-semibold' 
+            : isMobile ? 'text-white hover:text-amber-400' : 'text-white hover:text-amber-400'
+        }`}
         whileHover={{ scale: 1.1 }}
         onClick={() => onNavigate('menu')}
       >
@@ -38,13 +42,36 @@ const NavItems: React.FC<NavItemsProps> = ({ onNavigate, currentPage, isMobile =
       
       <motion.button 
         className={`${baseButtonClasses} ${
-          isMobile ? 'text-white hover:text-amber-400' : 'hover:text-amber-400'
-        } ${currentPage === 'normativa' ? 'text-amber-400 font-semibold' : ''}`}
+          currentPage === 'normativa' 
+            ? 'text-amber-400 font-semibold' 
+            : isMobile ? 'text-white hover:text-amber-400' : 'text-white hover:text-amber-400'
+        }`}
         whileHover={{ scale: 1.1 }}
         onClick={() => onNavigate('normativa')}
       >
         NORMATIVA
         {currentPage === 'normativa' && !isMobile && (
+          <motion.div 
+            className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-400" 
+            layoutId="navbar-indicator"
+            initial={{ width: 0 }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+      </motion.button>
+      
+      <motion.button 
+        className={`${baseButtonClasses} ${
+          currentPage === 'postulaciones' 
+            ? 'text-amber-400 font-semibold' 
+            : isMobile ? 'text-white hover:text-amber-400' : 'text-white hover:text-amber-400'
+        }`}
+        whileHover={{ scale: 1.1 }}
+        onClick={() => onNavigate('postulaciones')}
+      >
+        POSTULACIONES
+        {currentPage === 'postulaciones' && !isMobile && (
           <motion.div 
             className="absolute bottom-0 left-0 right-0 h-0.5 bg-amber-400" 
             layoutId="navbar-indicator"
@@ -73,9 +100,7 @@ const NavItems: React.FC<NavItemsProps> = ({ onNavigate, currentPage, isMobile =
         className={`${isMobile ? 'w-full ' : ''}border border-amber-400 px-4 py-2 rounded transition-colors ${
           currentPage === 'whitelist' 
             ? 'bg-amber-400 text-black font-semibold' 
-            : isMobile
-              ? 'text-white hover:bg-amber-400 hover:text-black'
-              : 'hover:bg-amber-400 hover:text-black'
+            : 'text-amber-400 hover:bg-amber-400 hover:text-black'
         }`}
         whileHover={{ scale: 1.05 }}
         onClick={() => onNavigate('whitelist')}
@@ -88,10 +113,19 @@ const NavItems: React.FC<NavItemsProps> = ({ onNavigate, currentPage, isMobile =
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const handleLogout = async () => {
+    await logout();
+    // Redirigir a home después del logout
+    onNavigate('home');
+  };
+
+  const isAuthenticated = user !== null;
 
   return (
     <motion.div 
@@ -102,77 +136,109 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
     >
       {/* Desktop and Mobile Header */}
       <div className="flex justify-between items-center p-6">
-        <motion.div 
-          className="flex items-center space-x-4 cursor-pointer"
-          whileHover={{ scale: 1.05 }}
+        {/* Logo */}
+        <motion.div
+          className="flex items-center space-x-3 cursor-pointer"
           onClick={() => onNavigate('home')}
+          whileHover={{ scale: 1.05 }}
         >
-          <div className="w-12 h-12 flex items-center justify-center">
-            <img src="/images/logo.png" alt="Logo OldStreet" className="w-full h-full object-contain" />
+          <img 
+            src="./images/logo.png" 
+            alt="OldStreet Logo" 
+            className="h-12 w-12 object-contain"
+          />
+          <div>
+            <h1 className="text-2xl font-bold text-amber-400">OldStreet</h1>
+            <p className="text-xs text-amber-300">Roleplay Community</p>
           </div>
-          <h1 className="text-2xl font-bold text-amber-400">OldStreet</h1>
         </motion.div>
-
-        {/* Hamburger Menu Button (Mobile Only) */}
-        <button 
-          className="lg:hidden text-amber-400 p-2 hover:bg-amber-400/10 rounded-lg"
-          onClick={toggleMenu}
-          aria-label="Menu"
-        >
-          <svg 
-            className="w-6 h-6" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            {isMenuOpen ? (
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
-        </button>
 
         {/* Desktop Navigation */}
-        <motion.div 
-          className="hidden lg:flex items-center space-x-6 text-white"
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
+        <div className="hidden lg:flex items-center space-x-8">
           <NavItems onNavigate={onNavigate} currentPage={currentPage} />
-        </motion.div>
+          
+          {/* User Info / Auth Section */}
+          <div className="flex items-center space-x-4 ml-6 pl-6 border-l border-amber-500/30">
+            {isAuthenticated && user ? (
+              <div className="flex items-center space-x-3">
+                <div className="text-right">
+                  <p className="text-amber-400 font-bold text-sm">{user.username}</p>
+                  <p className="text-xs text-amber-300">{user.email}</p>
+                  {user.has_whitelist && (
+                    <span className="inline-block bg-amber-400 text-black text-xs px-2 py-1 rounded mt-1 font-semibold">
+                      ✓ Whitelist
+                    </span>
+                  )}
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="text-amber-400 hover:text-red-400 transition-colors text-lg p-1 bg-amber-400/10 rounded hover:bg-red-400/10"
+                  title="Cerrar sesión"
+                >
+                  🚪
+                </button>
+              </div>
+            ) : (
+              <div className="text-amber-400 text-sm bg-amber-400/10 px-3 py-1 rounded">
+                No autenticado
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile menu button */}
+        <div className="lg:hidden">
+          <motion.button
+            onClick={toggleMenu}
+            className="text-white focus:outline-none"
+            whileTap={{ scale: 0.95 }}
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </motion.button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
+            className="lg:hidden bg-black bg-opacity-95 absolute top-full left-0 right-0 backdrop-blur-sm border-t border-amber-500/30"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="lg:hidden bg-gray-900/95 border-t border-amber-400/20"
           >
-            <div className="flex flex-col items-center space-y-4 p-6">
-              <NavItems 
-                onNavigate={(page) => {
-                  onNavigate(page);
-                  setIsMenuOpen(false);
-                }} 
-                currentPage={currentPage}
-                isMobile={true}
-              />
+            <div className="flex flex-col space-y-4 p-6">
+              <NavItems onNavigate={(page) => { onNavigate(page); setIsMenuOpen(false); }} currentPage={currentPage} isMobile />
+              
+              {/* Mobile User Info */}
+              <div className="border-t border-amber-500/30 pt-4 mt-4">
+                {isAuthenticated && user ? (
+                  <div>
+                    <div className="text-center mb-4 bg-amber-400/10 p-3 rounded">
+                      <p className="text-amber-400 font-bold">{user.username}</p>
+                      <p className="text-xs text-amber-300">{user.email}</p>
+                      {user.has_whitelist && (
+                        <span className="inline-block bg-amber-400 text-black text-xs px-2 py-1 rounded mt-2 font-semibold">
+                          ✓ Whitelist Aprobada
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                      className="w-full text-amber-400 hover:text-red-400 transition-colors text-sm py-2 border border-amber-500/30 rounded bg-amber-400/5 hover:bg-red-400/10"
+                    >
+                      🚪 Cerrar Sesión
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-center text-amber-400 bg-amber-400/10 p-3 rounded">
+                    No autenticado
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         )}

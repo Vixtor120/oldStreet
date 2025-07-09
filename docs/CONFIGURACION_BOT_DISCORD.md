@@ -48,3 +48,6 @@ Si la asignación de roles no funciona:
 
 - ID del Servidor: 1119729040408973333
 - ID del Rol Whitelist: 1262793580481875998
+- TOKEN DEL Bot: [CONFIGURADO EN .env - NO COMPARTIR PÚBLICAMENTE]
+
+**Nota de Seguridad**: El token del bot debe mantenerse en el archivo `.env` y nunca debe ser expuesto públicamente en repositorios o documentación.

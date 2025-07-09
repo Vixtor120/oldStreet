@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 
 interface NormativaProps {
-  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'whitelist') => void;
+  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist') => void;
 }
 
 const ImportantNote = () => (
@@ -1245,6 +1245,18 @@ const Normativa: React.FC<NormativaProps> = ({ onNavigate }) => {
               onClick={() => onNavigate('whitelist')}
             >
               📋 Solicitar Whitelist
+            </motion.button>
+            
+            <motion.button 
+              className="bg-gradient-to-r from-purple-600 to-purple-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg border-2 border-purple-500"
+              whileHover={{
+                scale: 1.05,
+                boxShadow: "0 0 20px rgba(147, 51, 234, 0.3)",
+              }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => onNavigate('postulaciones')}
+            >
+              📝 Ver Postulaciones
             </motion.button>
 
             <motion.a 

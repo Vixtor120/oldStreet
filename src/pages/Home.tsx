@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface HomeProps {
-  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'whitelist') => void;
+  onNavigate: (page: 'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist') => void;
 }
 
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
