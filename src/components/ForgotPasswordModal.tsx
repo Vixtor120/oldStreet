@@ -38,7 +38,8 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
       const formData = new FormData();
       formData.append('email', email);
 
-      const response = await fetch('/auth/request_password_reset.php', {
+      // TEMPORAL: Usar endpoint de debug
+      const response = await fetch('/auth/request_password_reset_debug.php', {
         method: 'POST',
         body: formData,
       });
