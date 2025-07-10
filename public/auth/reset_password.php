@@ -79,23 +79,19 @@ try {
         
         $query = "UPDATE users SET password_hash = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
         $stmt = $auth->db->prepare($query);
-        $stmt->bind_param("si", $password_hash, $tokenData['user_id']);
-        
-        if (!$stmt->execute()) {
+        if (!$stmt->execute([$password_hash, $tokenData['user_id']])) {
             throw new Exception("Error al actualizar la contraseña");
         }
         
         // Marcar token como usado
         $query = "UPDATE password_reset_tokens SET used = TRUE, used_at = CURRENT_TIMESTAMP WHERE token = ?";
         $stmt = $auth->db->prepare($query);
-        $stmt->bind_param("s", $token);
-        $stmt->execute();
+        $stmt->execute([$token]);
         
         // Invalidar todas las sesiones existentes del usuario
         $query = "DELETE FROM user_sessions WHERE user_id = ?";
         $stmt = $auth->db->prepare($query);
-        $stmt->bind_param("i", $tokenData['user_id']);
-        $stmt->execute();
+        $stmt->execute([$tokenData['user_id']]);
         
         // Log de actividad
         $auth->logActivity($tokenData['user_id'], 'password_reset_completed', 'Contraseña cambiada via token');
@@ -124,10 +120,8 @@ try {
 function validateResetToken($auth, $token) {
     $query = "SELECT user_id, email, expires_at, used FROM password_reset_tokens WHERE token = ?";
     $stmt = $auth->db->prepare($query);
-    $stmt->bind_param("s", $token);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $tokenData = $result->fetch_assoc();
+    $stmt->execute([$token]);
+    $tokenData = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$tokenData) {
         return false; // Token no existe

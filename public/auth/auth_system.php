@@ -12,7 +12,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once '../env_loader.php';
 
 class AuthSystem {
-    private $db;
+    public $db;
     private $discord_bot_token;
     private $guild_id;
     private $whitelist_role_id;
@@ -98,10 +98,8 @@ class AuthSystem {
     public function getUserByEmail($email) {
         $query = "SELECT * FROM users WHERE email = ? AND is_active = TRUE";
         $stmt = $this->db->prepare($query);
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        return $result->fetch_assoc();
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function login($identifier, $password) {
@@ -232,7 +230,7 @@ class AuthSystem {
 
         // Actualizar roles de Discord periódicamente (cada hora)
         $last_check = strtotime($user['last_discord_check']);
-        if (time() - $last_check > 3600) { // 1 hora
+        if (time() - $last_check > 86400) { // 24 horas
             $this->updateUserDiscordRoles($user['id'], $user['discord_id']);
             
             // Recargar datos del usuario
@@ -337,7 +335,7 @@ class AuthSystem {
         }
     }
 
-    private function logActivity($user_id, $action, $details = null) {
+    public function logActivity($user_id, $action, $details = null) {
         $stmt = $this->db->prepare("
             INSERT INTO activity_logs (user_id, action, details, ip_address, user_agent) 
             VALUES (?, ?, ?, ?, ?)

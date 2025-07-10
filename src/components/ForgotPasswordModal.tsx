@@ -38,8 +38,9 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
       const formData = new FormData();
       formData.append('email', email);
 
-      // TEMPORAL: Debug específico de base de datos
-      const response = await fetch('/auth/request_password_reset_db_debug.php', {
+      // Endpoint funcional corregido
+      // Endpoint con base de datos pero sin email
+      const response = await fetch('/auth/test_with_db.php', {
         method: 'POST',
         body: formData,
       });
@@ -123,7 +124,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ isOpen, onClo
             </p>
             <ul className="text-gray-400 text-xs mt-2 space-y-1">
               <li>• Te enviaremos un enlace a tu email</li>
-              <li>• El enlace será válido por 1 hora</li>
+              <li>• El enlace será válido por 24 horas</li>
               <li>• Revisa tu carpeta de spam</li>
               <li>• Solo puedes usar el enlace una vez</li>
             </ul>

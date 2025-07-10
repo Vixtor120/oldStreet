@@ -12,9 +12,14 @@ const ResetPassword: React.FC = () => {
   const { showNotification } = useNotification();
 
   useEffect(() => {
-    // Obtener token de la URL
+    // Obtener token de la URL o de variable global (fallback)
     const urlParams = new URLSearchParams(window.location.search);
-    const tokenParam = urlParams.get('token');
+    let tokenParam = urlParams.get('token');
+    
+    // Fallback: leer de variable global si no está en URL
+    if (!tokenParam && (window as any).RESET_PASSWORD_TOKEN) {
+      tokenParam = (window as any).RESET_PASSWORD_TOKEN;
+    }
     
     if (!tokenParam) {
       showNotification({
@@ -32,13 +37,16 @@ const ResetPassword: React.FC = () => {
 
   const validateToken = async (tokenToValidate: string) => {
     try {
-      const response = await fetch(`/auth/reset_password.php?token=${tokenToValidate}`);
+      const response = await fetch(`/auth/reset_password_standalone.php?token=${tokenToValidate}`);
       const data = await response.json();
+      
+      console.log('Token validation response:', data); // Debug
       
       if (data.success) {
         setIsValidToken(true);
         setEmail(data.email);
       } else {
+        console.error('Token validation failed:', data); // Debug
         showNotification({
           type: 'error',
           title: 'Token inválido',
@@ -97,7 +105,7 @@ const ResetPassword: React.FC = () => {
       formData.append('new_password', newPassword);
       formData.append('confirm_password', confirmPassword);
 
-      const response = await fetch('/auth/reset_password.php', {
+      const response = await fetch('/auth/reset_password_standalone.php', {
         method: 'POST',
         body: formData,
       });

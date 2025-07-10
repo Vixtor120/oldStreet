@@ -54,14 +54,13 @@ try {
     
     // Generar token de recuperación
     $token = bin2hex(random_bytes(32));
-    $expires_at = date('Y-m-d H:i:s', time() + (60 * 60)); // 1 hora de expiración
+    $expires_at = date('Y-m-d H:i:s', time() + 86400); // 24 horas de expiración
     
     // Guardar token en la base de datos
     $query = "INSERT INTO password_reset_tokens (user_id, token, email, expires_at) VALUES (?, ?, ?, ?)";
     $stmt = $auth->db->prepare($query);
-    $stmt->bind_param("isss", $user['id'], $token, $email, $expires_at);
     
-    if (!$stmt->execute()) {
+    if (!$stmt->execute([$user['id'], $token, $email, $expires_at])) {
         throw new Exception("Error al generar token de recuperación");
     }
     
@@ -90,168 +89,164 @@ try {
 }
 
 /**
- * Función para enviar email de recuperación de contraseña
+ * Función para enviar email de recuperación de contraseña usando PHPMailer
  */
 function sendPasswordResetEmail($email, $username, $reset_link) {
-    // Configuración de email
-    $to = $email;
-    $subject = "Recuperación de Contraseña - OldStreet RP";
-    
-    // Plantilla HTML del email
-    $html_message = "
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta charset='UTF-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <title>Recuperación de Contraseña</title>
-        <style>
-            body { 
-                font-family: Arial, sans-serif; 
-                background-color: #0a0a0a; 
-                color: #ffffff; 
-                margin: 0; 
-                padding: 20px; 
-            }
-            .container { 
-                max-width: 600px; 
-                margin: 0 auto; 
-                background-color: #1a1a1a; 
-                border-radius: 10px; 
-                padding: 30px; 
-                border: 2px solid #d4af37; 
-            }
-            .header { 
-                text-align: center; 
-                margin-bottom: 30px; 
-            }
-            .logo { 
-                color: #d4af37; 
-                font-size: 28px; 
-                font-weight: bold; 
-                margin-bottom: 10px; 
-            }
-            .button { 
-                display: inline-block; 
-                background-color: #d4af37; 
-                color: #000000; 
-                padding: 15px 30px; 
-                text-decoration: none; 
-                border-radius: 5px; 
-                font-weight: bold; 
-                margin: 20px 0; 
-            }
-            .footer { 
-                text-align: center; 
-                margin-top: 30px; 
-                color: #888888; 
-                font-size: 12px; 
-            }
-            .warning { 
-                background-color: #2a1f1f; 
-                border-left: 4px solid #ff6b6b; 
-                padding: 15px; 
-                margin: 20px 0; 
-                border-radius: 5px; 
-            }
-        </style>
-    </head>
-    <body>
-        <div class='container'>
-            <div class='header'>
-                <div class='logo'>🏛️ OldStreet RP</div>
-                <h1>Recuperación de Contraseña</h1>
-            </div>
-            
-            <p>Hola <strong>{$username}</strong>,</p>
-            
-            <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en OldStreet RP.</p>
-            
-            <p>Para continuar con el proceso de recuperación, haz clic en el siguiente enlace:</p>
-            
-            <div style='text-align: center;'>
-                <a href='{$reset_link}' class='button'>🔐 Restablecer Contraseña</a>
-            </div>
-            
-            <div class='warning'>
-                <strong>⚠️ Importante:</strong>
-                <ul>
-                    <li>Este enlace es válido por <strong>1 hora</strong></li>
-                    <li>Solo puede ser usado <strong>una vez</strong></li>
-                    <li>Si no solicitaste este cambio, ignora este email</li>
-                </ul>
-            </div>
-            
-            <p>Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
-            <p style='word-break: break-all; background-color: #2a2a2a; padding: 10px; border-radius: 5px;'>{$reset_link}</p>
-            
-            <div class='footer'>
-                <p>Este email fue enviado automáticamente. No respondas a este mensaje.</p>
-                <p>© 2025 OldStreet RP - Todos los derechos reservados</p>
-            </div>
-        </div>
-    </body>
-    </html>";
-    
-    // Versión texto plano como fallback
-    $text_message = "
+    try {
+        require_once '../vendor/autoload.php';
+        
+        use PHPMailer\PHPMailer\PHPMailer;
+        use PHPMailer\PHPMailer\SMTP;
+        use PHPMailer\PHPMailer\Exception;
+        
+        $mail = new PHPMailer(true);
+        
+        // Configuración SMTP
+        $mail->isSMTP();
+        $mail->Host = $_ENV['SMTP_HOST'] ?? 'smtp.hostinger.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = $_ENV['SMTP_USERNAME'] ?? '';
+        $mail->Password = $_ENV['SMTP_PASSWORD'] ?? '';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = $_ENV['SMTP_PORT'] ?? 587;
+        $mail->CharSet = 'UTF-8';
+        
+        // Configurar remitente y destinatario
+        $from_email = $_ENV['SMTP_FROM_EMAIL'] ?? $_ENV['SMTP_USERNAME'] ?? 'noreply@oldstreetcm.com';
+        $from_name = $_ENV['SMTP_FROM_NAME'] ?? 'Old Street RP';
+        
+        $mail->setFrom($from_email, $from_name);
+        $mail->addAddress($email, $username);
+        
+        // Contenido del email
+        $mail->isHTML(true);
+        $mail->Subject = '🔐 Recuperación de Contraseña - Old Street RP';
+        
+        $mail->Body = "
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <style>
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        background-color: #0a0a0a; 
+                        color: #ffffff; 
+                        margin: 0; 
+                        padding: 20px; 
+                    }
+                    .container { 
+                        max-width: 600px; 
+                        margin: 0 auto; 
+                        background-color: #1a1a1a; 
+                        border-radius: 10px; 
+                        padding: 30px; 
+                        border: 2px solid #d4af37; 
+                    }
+                    .header { 
+                        text-align: center; 
+                        margin-bottom: 30px; 
+                    }
+                    .logo { 
+                        color: #d4af37; 
+                        font-size: 28px; 
+                        font-weight: bold; 
+                        margin-bottom: 10px; 
+                    }
+                    .button { 
+                        display: inline-block; 
+                        background-color: #d4af37; 
+                        color: #000000; 
+                        padding: 15px 30px; 
+                        text-decoration: none; 
+                        border-radius: 5px; 
+                        font-weight: bold; 
+                        margin: 20px 0; 
+                        text-align: center;
+                    }
+                    .content { 
+                        line-height: 1.6; 
+                        margin-bottom: 30px; 
+                    }
+                    .footer { 
+                        text-align: center; 
+                        margin-top: 30px; 
+                        color: #888888; 
+                        font-size: 12px; 
+                    }
+                    .warning { 
+                        background-color: #2a1810; 
+                        border-left: 4px solid #d4af37; 
+                        padding: 15px; 
+                        margin: 20px 0; 
+                    }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <div class='logo'>🏙️ OLD STREET RP</div>
+                        <h2 style='color: #d4af37; margin: 0;'>Recuperación de Contraseña</h2>
+                    </div>
+                    
+                    <div class='content'>
+                        <p>Hola <strong>{$username}</strong>,</p>
+                        
+                        <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en Old Street RP.</p>
+                        
+                        <p>Para continuar con el proceso, haz clic en el siguiente botón:</p>
+                        
+                        <div style='text-align: center;'>
+                            <a href='{$reset_link}' class='button'>🔓 Restablecer Contraseña</a>
+                        </div>
+                        
+                        <div class='warning'>
+                            <h4 style='color: #d4af37; margin-top: 0;'>⚠️ Información Importante:</h4>
+                            <ul>
+                                <li>Este enlace es válido por <strong>24 horas</strong></li>
+                                <li>Solo puede ser usado <strong>una vez</strong></li>
+                                <li>Si no solicitaste este cambio, puedes ignorar este email</li>
+                            </ul>
+                        </div>
+                        
+                        <p>Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
+                        <p style='word-break: break-all; background-color: #2a2a2a; padding: 10px; border-radius: 5px; font-family: monospace;'>{$reset_link}</p>
+                    </div>
+                    
+                    <div class='footer'>
+                        <p>Este email fue enviado automáticamente. No respondas a este mensaje.</p>
+                        <p>© 2025 Old Street RP - Todos los derechos reservados</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+        
+        // Versión de texto plano como fallback
+        $mail->AltBody = "
+Recuperación de Contraseña - Old Street RP
+
 Hola {$username},
 
-Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en OldStreet RP.
+Hemos recibido una solicitud para restablecer la contraseña de tu cuenta.
 
 Para continuar, visita este enlace: {$reset_link}
 
 IMPORTANTE:
-- Este enlace es válido por 1 hora
+- Este enlace es válido por 24 horas
 - Solo puede ser usado una vez
 - Si no solicitaste este cambio, ignora este email
 
-© 2025 OldStreet RP
-";
-    
-    // Intentar múltiples métodos de envío
-    $sent = false;
-    $error_log = "";
-    
-    // Método 1: Configuración SMTP con ini_set (para Hostinger)
-    if (!$sent) {
-        ini_set('SMTP', $_ENV['SMTP_HOST'] ?? 'smtp.hostinger.com');
-        ini_set('smtp_port', $_ENV['SMTP_PORT'] ?? '587');
-        ini_set('sendmail_from', $_ENV['SMTP_FROM_EMAIL'] ?? $to);
+© 2025 Old Street RP
+        ";
         
-        $headers = array(
-            'MIME-Version: 1.0',
-            'Content-type: text/html; charset=UTF-8',
-            'From: ' . ($_ENV['SMTP_FROM_NAME'] ?? 'OldStreet RP') . ' <' . ($_ENV['SMTP_FROM_EMAIL'] ?? 'noreply@oldstreetcm.com') . '>',
-            'Reply-To: ' . ($_ENV['SMTP_FROM_EMAIL'] ?? 'noreply@oldstreetcm.com')
-        );
+        $mail->send();
+        return true;
         
-        $sent = @mail($to, $subject, $html_message, implode("\r\n", $headers));
-        if (!$sent) {
-            $error = error_get_last();
-            $error_log .= "Método SMTP falló: " . ($error['message'] ?? 'Error desconocido') . "; ";
-        }
+    } catch (Exception $e) {
+        error_log("Error enviando email de recuperación: " . $e->getMessage());
+        return false;
     }
-    
-    // Método 2: mail() básico con headers simples
-    if (!$sent) {
-        $simple_headers = "From: " . ($_ENV['SMTP_FROM_EMAIL'] ?? 'noreply@oldstreetcm.com') . "\r\n";
-        $simple_headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-        
-        $sent = @mail($to, $subject, $text_message, $simple_headers);
-        if (!$sent) {
-            $error = error_get_last();
-            $error_log .= "Método básico falló: " . ($error['message'] ?? 'Error desconocido') . "; ";
-        }
-    }
-    
-    // Log para debugging
-    if (!$sent) {
-        error_log("Error enviando email de recuperación: " . $error_log);
-    } else {
-        error_log("Email de recuperación enviado exitosamente a: " . $to);
-    }
-    
-    return $sent;
 }
 ?>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider, useNotifications } from './context/NotificationContext';
 import Home from './pages/Home';
@@ -9,28 +10,32 @@ import Whitelist from './pages/Whitelist';
 import ResetPassword from './pages/ResetPassword';
 import AuthModal from './components/AuthModal';
 
-const AppContent: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState<'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist' | 'reset-password'>('home');
+const AppRoutes: React.FC = () => {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   
   const { user, loading } = useAuth();
   const { showWarning, showError } = useNotifications();
-
-  // Detectar si estamos en la página de reset-password
-  useEffect(() => {
-    const urlPath = window.location.pathname;
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    if (urlPath === '/reset-password' || urlParams.has('token')) {
-      setCurrentPage('reset-password');
-    }
-  }, []);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Scroll to top whenever the page changes
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-  }, [currentPage]);
+  }, [location.pathname]);
+
+  // Manejar parámetro 'page' para fallback cuando .htaccess no funciona
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const pageParam = urlParams.get('page');
+    
+    if (pageParam === 'reset-password' && location.pathname === '/') {
+      // Construir la nueva URL con el token si existe
+      const token = urlParams.get('token');
+      const newPath = token ? `/reset-password?token=${token}` : '/reset-password';
+      navigate(newPath, { replace: true });
+    }
+  }, [location, navigate]);
 
   const handleNavigate = (page: 'home' | 'menu' | 'normativa' | 'postulaciones' | 'whitelist') => {
     // Verificar permisos antes de navegar
@@ -68,38 +73,15 @@ const AppContent: React.FC = () => {
 
     // Force immediate scroll to top for instant feedback
     window.scrollTo(0, 0);
-    setCurrentPage(page);
-  };
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'menu':
-        return <Menu onNavigate={handleNavigate} onOpenAuthModal={(mode) => {
-          setAuthModalMode(mode);
-          setAuthModalOpen(true);
-        }} />;
-      case 'normativa':
-        return <Normativa onNavigate={handleNavigate} />;
-      case 'postulaciones':
-        return <Postulaciones onNavigate={handleNavigate} />;
-      case 'whitelist':
-        return <Whitelist onNavigate={handleNavigate} />;
-      case 'reset-password':
-        return <ResetPassword />;
-      default:
-        return <Home onNavigate={handleNavigate} />;
-    }
+    navigate(page === 'home' ? '/' : `/${page}`);
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center">
-        <div className="text-amber-400 text-xl flex items-center">
-          <svg className="animate-spin -ml-1 mr-3 h-8 w-8 text-amber-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          Cargando...
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-yellow-500 mx-auto mb-4"></div>
+          <p className="text-yellow-500 text-lg">Cargando...</p>
         </div>
       </div>
     );
@@ -107,7 +89,14 @@ const AppContent: React.FC = () => {
 
   return (
     <>
-      {renderPage()}
+      <Routes>
+        <Route path="/" element={<Home onNavigate={handleNavigate} />} />
+        <Route path="/menu" element={<Menu onNavigate={handleNavigate} />} />
+        <Route path="/normativa" element={<Normativa onNavigate={handleNavigate} />} />
+        <Route path="/postulaciones" element={<Postulaciones onNavigate={handleNavigate} />} />
+        <Route path="/whitelist" element={<Whitelist onNavigate={handleNavigate} />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+      </Routes>
       <AuthModal 
         isOpen={authModalOpen} 
         onClose={() => setAuthModalOpen(false)}
@@ -119,11 +108,13 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <NotificationProvider>
-        <AppContent />
-      </NotificationProvider>
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <NotificationProvider>
+          <AppRoutes />
+        </NotificationProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 
